@@ -8,18 +8,43 @@
 #include "tTunel.h"
 #include "tPosicao.h"
 
-#define MAX_PATH_SIZE 1001 // Tamanho maximo do diretorio
+#define maxCaminho 1001 // Tamanho maximo do diretorio
 
-int main(int argc, char *argv[])
+void inicializarJogo(const char *diretorio)
 {
-    if (argc < 2) // caso o diretorio nao seja informado
+    char caminho_inicializacao[maxCaminho];
+    char caminho_mapa[maxCaminho];
+    tMapa *mapa;
+    mapa = CriaMapa(diretorio);
+    sprintf(caminho_inicializacao, "%s/saida/inicializacao.txt", diretorio);
+    FILE *arquivo = fopen(caminho_inicializacao, "w");
+    if (arquivo == NULL)
+    {
+        printf("ERRO: Nao foi possivel criar o arquivo de inicializacao\n");
+        exit(1);
+    } 
+
+    for (int i = 0; i < mapa->nLinhas; i++)
+    {
+        fprintf(arquivo, "%s\n", mapa->grid[i]);
+    }
+
+    //fprintf(arquivo, "Pac-Man comecara o jogo na linha %d e coluna %d\n", local.PacMan_paclinha + 1, local.PacMan_paccoluna + 1);
+
+    fclose(arquivo);
+    DesalocaMapa(mapa);
+}
+
+int main(int argv, char *caminhoConfig[])
+{
+    if (argv < 2) // caso o diretorio nao seja informado
     {
         printf("ERRO: O diretorio de arquivos de configuracao nao foi informado\n");
         return 1;
     }
-
-    char diretorio[MAX_PATH_SIZE];
-    strcpy(diretorio, argv[1]);
+    char diretorio[maxCaminho];
+    strcpy(diretorio, caminhoConfig[1]);
+    inicializarJogo(diretorio);
 
     return 0;
 }
