@@ -3,23 +3,47 @@
 #include <stdbool.h>
 #include "tPosicao.h"
 
+tPosicao *CriaPosicao(int linha, int coluna)
+{
+    tPosicao *posicao = malloc(sizeof(tPosicao));
+    posicao->linha = linha;
+    posicao->coluna = coluna;
+    return posicao;
+}
 
-tPosicao* CriaPosicao(int linha, int coluna){}
+tPosicao *ClonaPosicao(tPosicao *posicao)
+{
+    tPosicao *posicao2;
+    posicao2->linha = posicao->linha;
+    posicao2->coluna = posicao->coluna;
+    return posicao2;
+}
 
+int ObtemLinhaPosicao(tPosicao *posicao)
+{
+    return posicao->linha;
+}
 
-tPosicao* ClonaPosicao(tPosicao* posicao){}
+int ObtemColunaPosicao(tPosicao *posicao)
+{
+    return posicao->coluna;
+}
 
+void AtualizaPosicao(tPosicao *posicaoAtual, tPosicao *posicaoNova)
+{
+    posicaoAtual->linha = posicaoNova->linha;
+    posicaoAtual->coluna = posicaoNova->coluna;
+}
 
-int ObtemLinhaPosicao(tPosicao* posicao){}
+bool SaoIguaisPosicao(tPosicao *posicao1, tPosicao *posicao2)
+{
+    if ((posicao1->linha == posicao2->coluna) && (posicao1->coluna == posicao2->coluna))
+    {
+        return true;
+    }
+    return false;
+}
 
-
-int ObtemColunaPosicao(tPosicao* posicao){}
-
-
-void AtualizaPosicao(tPosicao* posicaoAtual, tPosicao* posicaoNova){}
-
-
-bool SaoIguaisPosicao(tPosicao* posicao1, tPosicao* posicao2){}
-
-
-void DesalocaPosicao(tPosicao* posicao){}
+void DesalocaPosicao(tPosicao *posicao) {
+    free(posicao);
+}

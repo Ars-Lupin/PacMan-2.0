@@ -54,7 +54,8 @@ tMapa *CriaMapa(const char *caminhoConfig)
     return mapa;
 }
 
-tPosicao *ObtemPosicaoItemMapa(tMapa *mapa, char item) {
+tPosicao *ObtemPosicaoItemMapa(tMapa *mapa, char item)
+{
     tPosicao *posicaoItem;
     for (int i = 0; i < mapa->nLinhas; i++)
     {
@@ -94,7 +95,8 @@ tTunel *ObtemTunelMapa(tMapa *mapa)
     return tuneis;
 }
 
-char ObtemItemMapa(tMapa *mapa, tPosicao *posicao) {
+char ObtemItemMapa(tMapa *mapa, tPosicao *posicao)
+{
     char item = mapa->grid[posicao->linha][posicao->coluna];
     return item;
 }

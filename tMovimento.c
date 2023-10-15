@@ -3,17 +3,27 @@
 #include <string.h>
 #include "tMovimento.h"
 
+tMovimento *CriaMovimento(int numeroDoMovimento, COMANDO comando, const char *acao)
+{
+    tMovimento *movimento = malloc(sizeof(tMovimento));
+    movimento->numeroDoMovimento = numeroDoMovimento;
+    movimento->comando = comando;
+    strcpy(movimento->acao, acao);
+    return movimento;
+}
 
-tMovimento* CriaMovimento(int numeroDoMovimento, COMANDO comando, const char* acao){}
+int ObtemNumeroMovimento(tMovimento *movimento) {
+    return movimento->numeroDoMovimento;
+}
 
+COMANDO ObtemComandoMovimento(tMovimento *movimento) {
+    return movimento->comando;
+}
 
-int ObtemNumeroMovimento(tMovimento* movimento){}
+char *ObtemAcaoMovimento(tMovimento *movimento) {
+    return movimento->acao;
+}
 
-
-COMANDO ObtemComandoMovimento(tMovimento* movimento){}
-
-
-char* ObtemAcaoMovimento(tMovimento* movimento){}
-
-
-void DesalocaMovimento(tMovimento* movimento){}
+void DesalocaMovimento(tMovimento *movimento) {
+    free(movimento);
+}
