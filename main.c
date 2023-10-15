@@ -32,6 +32,7 @@ void inicializarJogo(const char *diretorio)
     //fprintf(arquivo, "Pac-Man comecara o jogo na linha %d e coluna %d\n", local.PacMan_paclinha + 1, local.PacMan_paccoluna + 1);
 
     fclose(arquivo);
+    //RealizaJogo(diretorio, mapa);
     DesalocaMapa(mapa);
 }
 

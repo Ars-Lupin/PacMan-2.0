@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-lm
+CFLAGS=
 DEPS=tMapa.h tTunel.h tPacMan.h tPosicao.h tMovimento.h
 OBJ=main.o tMapa.o tTunel.o tPacMan.o tPosicao.o tMovimento.o
 
@@ -10,7 +10,7 @@ principal: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 	echo "Compilado!"
 
-clean:
+clear:
 	rm -rf *.o principal
 
 run:

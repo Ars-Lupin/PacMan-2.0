@@ -23,7 +23,7 @@ tMapa *CriaMapa(const char *caminhoConfig)
     }
 
     mapa->nLinhas = 0;
-    int maxColunas = 0;
+    mapa->nColunas = 0;
 
     fscanf(arquivo, "%d\n", &mapa->nMaximoMovimentos);
 
@@ -41,11 +41,6 @@ tMapa *CriaMapa(const char *caminhoConfig)
 
         mapa->nColunas = strlen(entrada);
 
-        if (mapa->nColunas > maxColunas)
-        {
-            maxColunas = mapa->nColunas;
-        }
-
         // Aloca espaço para a próxima linha
         mapa->grid[mapa->nLinhas] = (char *)malloc(mapa->nColunas + 1);
         strcpy(mapa->grid[mapa->nLinhas], entrada);
@@ -59,31 +54,142 @@ tMapa *CriaMapa(const char *caminhoConfig)
     return mapa;
 }
 
-tPosicao *ObtemPosicaoItemMapa(tMapa *mapa, char item) {}
+tPosicao *ObtemPosicaoItemMapa(tMapa *mapa, char item) {
+    tPosicao *posicaoItem;
+    for (int i = 0; i < mapa->nLinhas; i++)
+    {
+        for (int j = 0; j < mapa->nColunas; j++)
+        {
+            if (mapa->grid[i][j] == item)
+            {
+                posicaoItem->linha = i;
+                posicaoItem->coluna = j;
+            }
+        }
+    }
+    return posicaoItem;
+}
 
-tTunel *ObtemTunelMapa(tMapa *mapa) {}
+tTunel *ObtemTunelMapa(tMapa *mapa)
+{
+    tTunel *tuneis;
+    int cont;
+    for (int i = 0; i < mapa->nLinhas; i++)
+    {
+        for (int j = 0; j < mapa->nColunas; j++)
+        {
+            if ((mapa->grid[i][j] == '@') && (cont = 0))
+            {
+                tuneis->acesso1->linha = i;
+                tuneis->acesso1->coluna = j;
+                cont++;
+            }
+            else if ((mapa->grid[i][j] == '@') && (cont = 1))
+            {
+                tuneis->acesso2->linha = i;
+                tuneis->acesso2->coluna = j;
+            }
+        }
+    }
+    return tuneis;
+}
 
-char ObtemItemMapa(tMapa *mapa, tPosicao *posicao) {}
+char ObtemItemMapa(tMapa *mapa, tPosicao *posicao) {
+    char item = mapa->grid[posicao->linha][posicao->coluna];
+    return item;
+}
 
-int ObtemNumeroLinhasMapa(tMapa *mapa) {}
+int ObtemNumeroLinhasMapa(tMapa *mapa)
+{
+    return mapa->nLinhas;
+}
 
-int ObtemNumeroColunasMapa(tMapa *mapa) {}
+int ObtemNumeroColunasMapa(tMapa *mapa)
+{
+    return mapa->nColunas;
+}
 
-int ObtemQuantidadeFrutasIniciaisMapa(tMapa *mapa) {}
+int ObtemQuantidadeFrutasIniciaisMapa(tMapa *mapa)
+{
+    int frutasIniciais = 0;
+    for (int i = 0; i < mapa->nLinhas; i++)
+    {
+        for (int j = 0; j < mapa->nColunas; j++)
+        {
+            if (mapa->grid[i][j] == '*')
+            {
+                frutasIniciais++;
+            }
+        }
+    }
+    return frutasIniciais;
+}
 
-int ObtemNumeroMaximoMovimentosMapa(tMapa *mapa) {}
+int ObtemNumeroMaximoMovimentosMapa(tMapa *mapa)
+{
+    return mapa->nMaximoMovimentos;
+}
 
-bool EncontrouComidaMapa(tMapa *mapa, tPosicao *posicao) {}
+bool EncontrouComidaMapa(tMapa *mapa, tPosicao *posicao)
+{
+    if (mapa->grid[posicao->linha][posicao->coluna] == '*')
+    {
+        return true;
+    }
+    return false;
+}
 
-bool EncontrouParedeMapa(tMapa *mapa, tPosicao *posicao) {}
+bool EncontrouParedeMapa(tMapa *mapa, tPosicao *posicao)
+{
+    if (mapa->grid[posicao->linha][posicao->coluna] == '#')
+    {
+        return true;
+    }
+    return false;
+}
 
 bool AtualizaItemMapa(tMapa *mapa, tPosicao *posicao, char item) {}
 
-bool PossuiTunelMapa(tMapa *mapa) {}
+bool PossuiTunelMapa(tMapa *mapa)
+{
+    for (int i = 0; i < mapa->nLinhas; i++)
+    {
+        for (int j = 0; j < mapa->nColunas; j++)
+        {
+            if (mapa->grid[i][j] == '@')
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
-bool AcessouTunelMapa(tMapa *mapa, tPosicao *posicao) {}
+bool AcessouTunelMapa(tMapa *mapa, tPosicao *posicao)
+{
+    if (mapa->grid[posicao->linha][posicao->coluna] == '@')
+    {
+        return true;
+    }
+    return false;
+}
 
-void EntraTunelMapa(tMapa *mapa, tPosicao *posicao) {}
+void EntraTunelMapa(tMapa *mapa, tPosicao *posicao)
+{
+
+    if ((posicao->linha == mapa->tunel->acesso1->linha) &&
+        (posicao->coluna == mapa->tunel->acesso1->coluna))
+    {
+        posicao->linha = mapa->tunel->acesso2->linha;
+        posicao->coluna = mapa->tunel->acesso2->coluna;
+    }
+    else if ((posicao->linha == mapa->tunel->acesso2->linha) &&
+             (posicao->coluna == mapa->tunel->acesso2->coluna))
+    {
+        posicao->linha = mapa->tunel->acesso1->linha;
+        posicao->coluna = mapa->tunel->acesso1->coluna;
+    }
+}
 
 void DesalocaMapa(tMapa *mapa)
 {
@@ -91,4 +197,6 @@ void DesalocaMapa(tMapa *mapa)
     {
         free(mapa->grid[i]);
     }
+    free(mapa->grid);
+    free(mapa);
 }
