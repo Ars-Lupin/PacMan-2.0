@@ -25,8 +25,9 @@ bool EntrouTunel(tTunel *tunel, tPosicao *posicao)
     return false;
 }
 
-void LevaFinalTunel(tTunel *tunel, tPosicao *posicao) {
-        if ((posicao->linha == tunel->acesso1->linha) &&
+void LevaFinalTunel(tTunel *tunel, tPosicao *posicao)
+{
+    if ((posicao->linha == tunel->acesso1->linha) &&
         (posicao->coluna == tunel->acesso1->coluna))
     {
         posicao->linha = tunel->acesso2->linha;
@@ -40,6 +41,7 @@ void LevaFinalTunel(tTunel *tunel, tPosicao *posicao) {
     }
 }
 
-void DesalocaTunel(tTunel *tunel) {
+void DesalocaTunel(tTunel *tunel)
+{
     free(tunel);
 }

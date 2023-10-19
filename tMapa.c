@@ -51,6 +51,44 @@ tMapa *CriaMapa(const char *caminhoConfig)
 
     fclose(arquivo);
 
+    // Acha se tiver tem tuneis e quais suas posições
+    int cont;
+    for (int i = 0; i < mapa->nLinhas; i++)
+    {
+        for (int j = 0; j < mapa->nColunas; j++)
+        {
+            if ((mapa->grid[i][j] == '@') && (cont = 0))
+            {
+                mapa->tunel->acesso1->linha = i;
+                mapa->tunel->acesso1->coluna = j;
+                cont++;
+            }
+            else if ((mapa->grid[i][j] == '@') && (cont = 1))
+            {
+                mapa->tunel->acesso2->linha = i;
+                mapa->tunel->acesso2->coluna = j;
+            }
+            else
+            {
+                mapa->tunel->acesso1->linha = NULL;
+                mapa->tunel->acesso1->coluna = NULL;
+                mapa->tunel->acesso2->linha = NULL;
+                mapa->tunel->acesso2->coluna = NULL;
+            }
+        }
+    }
+
+    // Obtem o número de frutas do mapa
+    for (int i = 0; i < mapa->nLinhas; i++)
+    {
+        for (int j = 0; j < mapa->nColunas; j++)
+        {
+            if (mapa->grid[i][j] == '*')
+            {
+                mapa->nFrutasAtual++;
+            }
+        }
+    }
     return mapa;
 }
 
@@ -73,26 +111,7 @@ tPosicao *ObtemPosicaoItemMapa(tMapa *mapa, char item)
 
 tTunel *ObtemTunelMapa(tMapa *mapa)
 {
-    tTunel *tuneis;
-    int cont;
-    for (int i = 0; i < mapa->nLinhas; i++)
-    {
-        for (int j = 0; j < mapa->nColunas; j++)
-        {
-            if ((mapa->grid[i][j] == '@') && (cont = 0))
-            {
-                tuneis->acesso1->linha = i;
-                tuneis->acesso1->coluna = j;
-                cont++;
-            }
-            else if ((mapa->grid[i][j] == '@') && (cont = 1))
-            {
-                tuneis->acesso2->linha = i;
-                tuneis->acesso2->coluna = j;
-            }
-        }
-    }
-    return tuneis;
+    return mapa->tunel;
 }
 
 char ObtemItemMapa(tMapa *mapa, tPosicao *posicao)
@@ -113,17 +132,8 @@ int ObtemNumeroColunasMapa(tMapa *mapa)
 
 int ObtemQuantidadeFrutasIniciaisMapa(tMapa *mapa)
 {
-    int frutasIniciais = 0;
-    for (int i = 0; i < mapa->nLinhas; i++)
-    {
-        for (int j = 0; j < mapa->nColunas; j++)
-        {
-            if (mapa->grid[i][j] == '*')
-            {
-                frutasIniciais++;
-            }
-        }
-    }
+    int frutasIniciais = mapa->nFrutasAtual;
+
     return frutasIniciais;
 }
 
@@ -154,43 +164,26 @@ bool AtualizaItemMapa(tMapa *mapa, tPosicao *posicao, char item) {}
 
 bool PossuiTunelMapa(tMapa *mapa)
 {
-    for (int i = 0; i < mapa->nLinhas; i++)
+    if (mapa->tunel->acesso1->linha == NULL)
     {
-        for (int j = 0; j < mapa->nColunas; j++)
-        {
-            if (mapa->grid[i][j] == '@')
-            {
-                return true;
-            }
-        }
+        return false;
     }
-    return false;
+    return true;
 }
 
 bool AcessouTunelMapa(tMapa *mapa, tPosicao *posicao)
 {
-    if (mapa->grid[posicao->linha][posicao->coluna] == '@')
+    bool a = EntrouTunel(mapa->tunel, posicao);
+    if (a == true)
     {
-        return true;
+        return true
     }
     return false;
 }
 
 void EntraTunelMapa(tMapa *mapa, tPosicao *posicao)
 {
-
-    if ((posicao->linha == mapa->tunel->acesso1->linha) &&
-        (posicao->coluna == mapa->tunel->acesso1->coluna))
-    {
-        posicao->linha = mapa->tunel->acesso2->linha;
-        posicao->coluna = mapa->tunel->acesso2->coluna;
-    }
-    else if ((posicao->linha == mapa->tunel->acesso2->linha) &&
-             (posicao->coluna == mapa->tunel->acesso2->coluna))
-    {
-        posicao->linha = mapa->tunel->acesso1->linha;
-        posicao->coluna = mapa->tunel->acesso1->coluna;
-    }
+    LevaFinalTunel(mapa->tunel, posicao);
 }
 
 void DesalocaMapa(tMapa *mapa)

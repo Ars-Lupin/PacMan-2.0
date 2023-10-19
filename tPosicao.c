@@ -44,6 +44,7 @@ bool SaoIguaisPosicao(tPosicao *posicao1, tPosicao *posicao2)
     return false;
 }
 
-void DesalocaPosicao(tPosicao *posicao) {
+void DesalocaPosicao(tPosicao *posicao)
+{
     free(posicao);
 }

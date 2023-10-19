@@ -12,18 +12,22 @@ tMovimento *CriaMovimento(int numeroDoMovimento, COMANDO comando, const char *ac
     return movimento;
 }
 
-int ObtemNumeroMovimento(tMovimento *movimento) {
+int ObtemNumeroMovimento(tMovimento *movimento)
+{
     return movimento->numeroDoMovimento;
 }
 
-COMANDO ObtemComandoMovimento(tMovimento *movimento) {
+COMANDO ObtemComandoMovimento(tMovimento *movimento)
+{
     return movimento->comando;
 }
 
-char *ObtemAcaoMovimento(tMovimento *movimento) {
+char *ObtemAcaoMovimento(tMovimento *movimento)
+{
     return movimento->acao;
 }
 
-void DesalocaMovimento(tMovimento *movimento) {
+void DesalocaMovimento(tMovimento *movimento)
+{
     free(movimento);
 }
