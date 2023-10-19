@@ -11,7 +11,9 @@ typedef struct tPosicao{
 }tPosicao;
 
 /**
- * Cria a posição dinamicamente
+ * Cria a posição dinamicamente.
+ * Dados os valores de linha e coluna, 
+ * aloca dinamicamente o tipo tPosicao e retorna o ponteiro.
  * \param linha linha da posição
  * \param coluna coluna da posição
  */
@@ -19,6 +21,7 @@ tPosicao* CriaPosicao(int linha, int coluna);
 
 /**
  * Clona a posição (construtor de cópia)
+ * Aloca outra posicao com as informaçoes da original (passada como parâmetro).
  * \param posicao posição
  */
 tPosicao* ClonaPosicao(tPosicao* posicao);
@@ -36,14 +39,17 @@ int ObtemLinhaPosicao(tPosicao* posicao);
 int ObtemColunaPosicao(tPosicao* posicao);
 
 /**
- * Atualiza a posição a atual por uma nova posição
+ * Atualiza a posição a atual por uma nova posição.
+ * Dada a posição atual, atualiza as informações da posição 
+ * nova com a da posição atual.
  * \param posicaoAtual posição atual
  * \param posicaoNova posição nova
  */
 void AtualizaPosicao(tPosicao* posicaoAtual, tPosicao* posicaoNova);
 
 /**
- * Verifica se 2 posição são iguais
+ * Verifica se 2 posições são iguais comparando seus atributos.
+ * Retorna verdadeiro caso são iguais, e falso caso contrário.
  * \param posicao1 posição 1
  * \param posicao2 posição 2
  */

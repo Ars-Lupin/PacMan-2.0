@@ -43,20 +43,27 @@ typedef struct tPacman{
 } tPacman;
 
 /**
- * Cria o pacman dinamicamente
+ * Cria o pacman dinamicamente. Caso dê erro na alocação da estrutura tPacman, 
+ * retorna NULL. 
+ * Caso a posição passada como parâmetro seja NULL, retorna NULL.
+ * Caso não dê erros, retorna o ponteiro para o tPacman alocado.
  * \param posicao Ponteiro para tPosicao
  */
 tPacman* CriaPacman(tPosicao* posicao);
 
 /**
- * Clona o pacman dinamicamente, construtor de cópia
+ * Clona o pacman dinamicamente, construtor de cópia.
+ * Aloca outro pacman com as informaçoes do original (passado como parâmetro).
  * \param pacman pacman
  */
 tPacman* ClonaPacman(tPacman* pacman);
 
 /**
  * Clona a lista historico de movimentos significativos do pacman.
- * 
+ * Aloca dinamicamente todas as estruturas do histórico de
+ * movimentos do pacman original (passado como parâmetro): a lista e os movimentos da lista.
+ * E por fim copia as informações do histórico original para o clone.
+ * Retorna um ponteiro para o tMovimento** clone.
  * \param pacman pacman
  */
 tMovimento** ClonaHistoricoDeMovimentosSignificativosPacman(tPacman* pacman);
@@ -77,6 +84,10 @@ int EstaVivoPacman(tPacman* pacman);
 
 /**
  * Função que irá mover o pacman no mapa, atualizando sua posição.
+ * Dado o pacman, o mapa, e o comando do jogador, a posição do pacman
+ * é atualizada. Consultas ao mapa deverão ser feitas para ver se
+ * a posição pode ser realmente atualizada ou não, como por exemplo,
+ * se o pacman encontrou uma parede ele não se move.
  * 
  * \param pacman pacman
  * \param mapa o mapa que contem o pacman
@@ -86,6 +97,8 @@ void MovePacman(tPacman* pacman, tMapa* mapa, COMANDO comando);
 
 /**
  * Aloca a trilha dinamicamente.
+ * Caso a trilha seja igual a NULL, a matriz int** deverá ser
+ * alocada dinamicamente com os valores de linha e coluna.
  * 
  * \param pacman pacman
  * \param nLinhas número de linhas da trilha
@@ -95,13 +108,15 @@ void CriaTrilhaPacman(tPacman* pacman, int nLinhas, int nColunas);
 
 /**
  * Atualiza na trilha a posição por onde passou o pacman.
- * 
+ * Dado o pacman, com suas informações de posição e trilha na estrutura,
+ * atualiza o item da trilha, referente a posição atual do pacman,
+ * para o valor int correspondente ao número do movimento atual do pacman.
  * \param pacman pacman
  */
 void AtualizaTrilhaPacman(tPacman* pacman);
 
 /**
- * Salva a trilha em um arquivo.
+ * Salva a trilha em um arquivo na raíz junto com o binário.
  * 
  * \param pacman pacman
  */
@@ -109,6 +124,9 @@ void SalvaTrilhaPacman(tPacman* pacman);
 
 /**
  * Insere na lista de movimentos um novo movimento significativo.
+ * Dado o pacman, o comando do jogador, e a ação significativa,
+ * cria um movimento significativo tMovimento com essas informações e
+ * insere na lista de movimentos significativos do pacman.
  * 
  * \param pacman pacman
  * \param comando o comando do movimento
@@ -124,7 +142,8 @@ void InsereNovoMovimentoSignificativoPacman(tPacman* pacman, COMANDO comando, co
 void MataPacman(tPacman* pacman);
 
 /**
- * Libera o espaço alocado para a estrutura tPacman
+ * Caso o pacman seja diferente de NULL, libera o espaço 
+ * alocado para a estrutura tPacman
  * 
  * \param pacman pacman
  */
