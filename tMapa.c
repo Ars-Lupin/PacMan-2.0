@@ -70,10 +70,7 @@ tMapa *CriaMapa(const char *caminhoConfig)
             }
             else
             {
-                mapa->tunel->acesso1->linha = NULL;
-                mapa->tunel->acesso1->coluna = NULL;
-                mapa->tunel->acesso2->linha = NULL;
-                mapa->tunel->acesso2->coluna = NULL;
+                mapa->tunel = NULL;
             }
         }
     }
@@ -164,7 +161,7 @@ bool AtualizaItemMapa(tMapa *mapa, tPosicao *posicao, char item) {}
 
 bool PossuiTunelMapa(tMapa *mapa)
 {
-    if (mapa->tunel->acesso1->linha == NULL)
+    if (mapa->tunel == NULL)
     {
         return false;
     }
@@ -173,10 +170,9 @@ bool PossuiTunelMapa(tMapa *mapa)
 
 bool AcessouTunelMapa(tMapa *mapa, tPosicao *posicao)
 {
-    bool a = EntrouTunel(mapa->tunel, posicao);
-    if (a == true)
+    if (EntrouTunel(mapa->tunel, posicao))
     {
-        return true
+        return true;
     }
     return false;
 }

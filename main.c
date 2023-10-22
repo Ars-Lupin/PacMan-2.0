@@ -10,15 +10,15 @@
 
 #define maxCaminho 1001 // Tamanho maximo do diretorio
 
-void geraEstastisticas{}
+// void geraEstastisticas{}
 
-void geraResumo{}
+// void geraResumo{}
 
-void geraRanking{}
+// void geraRanking{}
 
-void realizaJogo{}
+// void realizaJogo{}
 
-void imprimeSaida{}
+// void imprimeSaida{}
 
 void inicializarJogo(const char *diretorio)
 {

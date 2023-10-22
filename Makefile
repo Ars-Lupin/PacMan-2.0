@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=
-DEPS=tMapa.h tTunel.h tPacMan.h tPosicao.h tMovimento.h
-OBJ=main.o tMapa.o tTunel.o tPacMan.o tPosicao.o tMovimento.o
+DEPS=tMapa.h tTunel.h tPacMan.h tPosicao.h tMovimento.h tFantasma.h
+OBJ=main.o tMapa.o tTunel.o tPacMan.o tPosicao.o tMovimento.o tFantasma.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
