@@ -11,6 +11,7 @@
 tMapa *CriaMapa(const char *caminhoConfig)
 {
     char caminhoMapa[maxCaminho];
+    char caracter;
     tMapa *mapa = malloc(sizeof(tMapa)); // Aloca a estrutura do mapa
 
     sprintf(caminhoMapa, "%s/mapa.txt", caminhoConfig);
@@ -24,26 +25,35 @@ tMapa *CriaMapa(const char *caminhoConfig)
 
     mapa->nLinhas = 0;
     mapa->nColunas = 0;
+    int colunaAtual = 0;
 
     fscanf(arquivo, "%d\n", &mapa->nMaximoMovimentos);
 
     // Aloca espaço para as linhas iniciais da matriz
     mapa->grid = (char **)malloc(sizeof(char *));
 
-    char entrada[1000]; // Suponha um tamanho máximo para cada linha
-
-    while (1)
+    while (!feof(arquivo))
     {
-        if (fscanf(arquivo, "%[^\n]\n", entrada) == EOF)
-        {
-            break; // caso chegue ao fim do arquivo, o loop para
-        }
-
-        mapa->nColunas = strlen(entrada);
-
-        // Aloca espaço para a próxima linha
         mapa->grid[mapa->nLinhas] = (char *)malloc(mapa->nColunas + 1);
-        strcpy(mapa->grid[mapa->nLinhas], entrada);
+        while (1)
+        {
+            fscanf(arquivo, "%c", &caracter);
+            if ((caracter == '\n') || (caracter == '\0'))
+            {
+                caracter = '\0';
+                mapa->grid[mapa->nLinhas][colunaAtual] = caracter;
+                break; // caso chegue ao fim do arquivo, o loop para
+            }
+            mapa->grid[mapa->nLinhas][colunaAtual] = caracter;
+            if (mapa->nLinhas == 0)
+            {
+                mapa->nColunas++;
+            }
+            colunaAtual++;
+            mapa->grid[mapa->nLinhas] = (char *)realloc(mapa->grid[mapa->nLinhas], mapa->nColunas + 1);
+        }
+        colunaAtual = 0;
+        // Aloca espaço para a próxima linha
         mapa->nLinhas++;
 
         mapa->grid = (char **)realloc(mapa->grid, (mapa->nLinhas + 1) * sizeof(char *));

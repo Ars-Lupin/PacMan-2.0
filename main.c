@@ -58,4 +58,3 @@ int main(int argv, char *caminhoConfig[])
     inicializarJogo(diretorio);
 
     return 0;
-}
