@@ -24,6 +24,9 @@ void inicializarJogo(const char *diretorio)
 {
     char caminho_inicializacao[maxCaminho];
     char caminho_mapa[maxCaminho];
+    char charPacMan = '>';
+    tPosicao *posicaoPacMan;
+    tPacman *pacMan;
     tMapa *mapa;
     mapa = CriaMapa(diretorio);
     sprintf(caminho_inicializacao, "%s/saida/inicializacao.txt", diretorio);
@@ -32,17 +35,20 @@ void inicializarJogo(const char *diretorio)
     {
         printf("ERRO: Nao foi possivel criar o arquivo de inicializacao\n");
         exit(1);
-    } 
+    }
 
     for (int i = 0; i < mapa->nLinhas; i++)
     {
         fprintf(arquivo, "%s\n", mapa->grid[i]);
     }
 
-    //fprintf(arquivo, "Pac-Man comecara o jogo na linha %d e coluna %d\n", local.PacMan_paclinha + 1, local.PacMan_paccoluna + 1);
+    posicaoPacMan = ObtemPosicaoItemMapa(mapa, charPacMan);
+    // pacMan = CriaPacman(posicaoPacMan);
+    
+    fprintf(arquivo, "Pac-Man comecara o jogo na linha %d e coluna %d\n", posicaoPacMan->linha + 1, posicaoPacMan->coluna + 1);
 
     fclose(arquivo);
-    //RealizaJogo(diretorio, mapa);
+    // RealizaJogo(diretorio, mapa);
     DesalocaMapa(mapa);
 }
 
@@ -55,6 +61,7 @@ int main(int argv, char *caminhoConfig[])
     }
     char diretorio[maxCaminho];
     strcpy(diretorio, caminhoConfig[1]);
+    // strcpy(diretorio, "template-TP-1-etapa-1/Casos/01");
     inicializarJogo(diretorio);
-
     return 0;
+}

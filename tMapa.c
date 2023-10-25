@@ -12,6 +12,7 @@ tMapa *CriaMapa(const char *caminhoConfig)
 {
     char caminhoMapa[maxCaminho];
     char caracter;
+    bool acabou;
     tMapa *mapa = malloc(sizeof(tMapa)); // Aloca a estrutura do mapa
 
     sprintf(caminhoMapa, "%s/mapa.txt", caminhoConfig);
@@ -38,7 +39,14 @@ tMapa *CriaMapa(const char *caminhoConfig)
         while (1)
         {
             fscanf(arquivo, "%c", &caracter);
-            if ((caracter == '\n') || (caracter == '\0'))
+            if (caracter == '\0')
+            {
+                mapa->grid[mapa->nLinhas][colunaAtual] = caracter;
+                acabou = true;
+                break; // caso chegue ao fim do arquivo, o loop para
+            }
+
+            if (caracter == '\n')
             {
                 caracter = '\0';
                 mapa->grid[mapa->nLinhas][colunaAtual] = caracter;
@@ -51,6 +59,9 @@ tMapa *CriaMapa(const char *caminhoConfig)
             }
             colunaAtual++;
             mapa->grid[mapa->nLinhas] = (char *)realloc(mapa->grid[mapa->nLinhas], mapa->nColunas + 1);
+        }
+        if(acabou){
+            break;
         }
         colunaAtual = 0;
         // Aloca espaço para a próxima linha
@@ -167,7 +178,15 @@ bool EncontrouParedeMapa(tMapa *mapa, tPosicao *posicao)
     return false;
 }
 
-bool AtualizaItemMapa(tMapa *mapa, tPosicao *posicao, char item) {}
+bool AtualizaItemMapa(tMapa *mapa, tPosicao *posicao, char item)
+{
+    if ((mapa->grid == NULL) || ((posicao->linha > mapa->nLinhas) && (posicao->coluna > mapa->nColunas) && (posicao->linha < 0) && (posicao->coluna < 0)))
+    {
+        return false;
+    }
+    mapa->grid[posicao->linha][posicao->coluna] = item;
+    return true;
+}
 
 bool PossuiTunelMapa(tMapa *mapa)
 {

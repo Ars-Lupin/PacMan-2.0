@@ -13,7 +13,7 @@ tPosicao *CriaPosicao(int linha, int coluna)
 
 tPosicao *ClonaPosicao(tPosicao *posicao)
 {
-    tPosicao *posicao2;
+    tPosicao *posicao2 = malloc(sizeof(tPosicao));
     posicao2->linha = posicao->linha;
     posicao2->coluna = posicao->coluna;
     return posicao2;

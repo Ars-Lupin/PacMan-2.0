@@ -17,7 +17,9 @@
 
 tFantasma **criaFantasmas(tMapa mapa)
 {
-    tFantasma *fantasma[4];
+    int tamanho = 4;
+    tFantasma **fantasma = (tFantasma **)malloc(tamanho * sizeof(tFantasma *));
+
     char tipo;
 
     for (int i = 0; i < 4; i++)
@@ -36,7 +38,7 @@ tFantasma **criaFantasmas(tMapa mapa)
             }
         }
     }
-
+    
     return fantasma;
 }
 
