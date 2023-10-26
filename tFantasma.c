@@ -19,8 +19,7 @@ tFantasma **criaFantasmas(tMapa mapa)
 {
     int tamanho = 4;
     tFantasma **fantasma = (tFantasma **)malloc(tamanho * sizeof(tFantasma *));
-
-    char tipo;
+    int tipo;
 
     for (int i = 0; i < 4; i++)
     {
@@ -31,39 +30,59 @@ tFantasma **criaFantasmas(tMapa mapa)
     {
         for (int j = 0; j < mapa.nColunas; j++)
         {
-            if (mapa.grid[i][j] == ('B' || 'P' || 'I' || 'C'))
+            if (mapa.grid[i][j] == 'B')
             {
+                tipo = B;
+                tipo = mapa.grid[i][j];
+                achaFantasma(fantasma, tipo, i, j);
+            }
+            else if (mapa.grid[i][j] == 'P')
+            {
+                tipo = P;
+                tipo = mapa.grid[i][j];
+                achaFantasma(fantasma, tipo, i, j);
+            }
+            else if (mapa.grid[i][j] == 'I')
+            {
+                tipo = I;
+                tipo = mapa.grid[i][j];
+                achaFantasma(fantasma, tipo, i, j);
+            }
+            else if (mapa.grid[i][j] == 'C')
+            {
+                tipo = C;
                 tipo = mapa.grid[i][j];
                 achaFantasma(fantasma, tipo, i, j);
             }
         }
     }
-    
+
     return fantasma;
 }
 
-void *achaFantasma(tFantasma *fantasma[4], char tipo, int linha, int coluna)
+void achaFantasma(tFantasma *fantasma[4], int tipo, int linha, int coluna)
 {
+    fantasma[tipo]->posicaoAtual = (tPosicao *)malloc(sizeof(tPosicao));
     fantasma[tipo]->existeFantasma = 1;
     fantasma[tipo]->posicaoAtual->linha = linha;
     fantasma[tipo]->posicaoAtual->coluna = coluna;
 }
 
-void *movimentaFantasma(tFantasma *fantasma, tMapa mapa)
+void movimentaFantasma(tFantasma *fantasma, tMapa mapa)
 {
     int i = 0;
-    movimentaDireções(fantasma);
+    movimentaDirecoes(fantasma);
     if (mapa.grid[fantasma->posicaoAtual->linha][fantasma->posicaoAtual->coluna] == '#')
     {
         fantasma->direção = fantasma->direção * -1;
         for (int i = 0; i < 2; i++)
         {
-            movimentaDireções(fantasma);
+            movimentaDirecoes(fantasma);
         }
     }
 }
 
-void *movimentaDireções(tFantasma *fantasma)
+void movimentaDirecoes(tFantasma *fantasma)
 {
     if (fantasma->direção == DIR)
     {

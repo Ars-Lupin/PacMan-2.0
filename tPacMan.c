@@ -5,10 +5,13 @@
 
 tPacman *CriaPacman(tPosicao *posicao)
 {
-    tPacman *pacman = malloc(sizeof(tPacman)); // Aloca a estrutura do mapa
+    tPacman *pacman = malloc(sizeof(tPacman)); // Aloca a estrutura do Pacman
+    pacman->posicaoAtual = (tPosicao *)malloc(sizeof(tPosicao));
+    pacman->historicoDeMovimentosSignificativos = (tMovimento **)malloc(sizeof(tMovimento *));
+
     pacman->posicaoAtual->linha = posicao->linha;
     pacman->posicaoAtual->coluna = posicao->coluna;
-    pacman->estaVivo = 1;
+    pacman->estaVivo = true;
     pacman->nMovimentosBaixo = 0;
     pacman->nFrutasComidasBaixo = 0;
     pacman->nColisoesParedeBaixo = 0;
@@ -29,78 +32,157 @@ tPacman *CriaPacman(tPosicao *posicao)
 
 tPacman *ClonaPacman(tPacman *pacman)
 {
-    tPacman *pacmanClone = malloc(sizeof(tPacman));
-    pacmanClone->posicaoAtual->linha = pacman->posicaoAtual->linha;
-    pacmanClone->posicaoAtual->coluna = pacman->posicaoAtual->coluna;
-    pacmanClone->estaVivo = pacman->estaVivo;
-    pacmanClone->nMovimentosBaixo = pacman->nMovimentosBaixo;
-    pacmanClone->nFrutasComidasBaixo = pacman->nFrutasComidasBaixo;
-    pacmanClone->nColisoesParedeBaixo = pacman->nColisoesParedeBaixo;
-    pacmanClone->nMovimentosCima = pacman->nMovimentosCima;
-    pacmanClone->nFrutasComidasCima = pacman->nFrutasComidasCima;
-    pacmanClone->nColisoesParedeCima = pacman->nColisoesParedeCima;
-    pacmanClone->nMovimentosEsquerda = pacman->nMovimentosEsquerda;
-    pacmanClone->nFrutasComidasEsquerda = pacman->nFrutasComidasEsquerda;
-    pacmanClone->nColisoesParedeEsquerda = pacman->nColisoesParedeEsquerda;
-    pacmanClone->nMovimentosDireita = pacman->nMovimentosDireita;
-    pacmanClone->nFrutasComidasDireita = pacman->nFrutasComidasDireita;
-    pacmanClone->nColisoesParedeDireita = pacman->nColisoesParedeDireita;
-    pacmanClone->nMovimentosSignificativos = pacman->nMovimentosSignificativos;
-    pacmanClone->nLinhasTrilha = pacman->nLinhasTrilha;
-    pacmanClone->nColunasTrilha = pacman->nColunasTrilha;
-    return pacmanClone;
+    tPacman *pacManClone = malloc(sizeof(tPacman));
+    pacManClone->posicaoAtual = (tPosicao *)malloc(sizeof(tPosicao));
+    pacManClone->historicoDeMovimentosSignificativos = (tMovimento **)malloc(sizeof(tMovimento *));
+
+    pacManClone->posicaoAtual->linha = pacman->posicaoAtual->linha;
+    pacManClone->posicaoAtual->coluna = pacman->posicaoAtual->coluna;
+    pacManClone->estaVivo = pacman->estaVivo;
+    pacManClone->nMovimentosBaixo = pacman->nMovimentosBaixo;
+    pacManClone->nFrutasComidasBaixo = pacman->nFrutasComidasBaixo;
+    pacManClone->nColisoesParedeBaixo = pacman->nColisoesParedeBaixo;
+    pacManClone->nMovimentosCima = pacman->nMovimentosCima;
+    pacManClone->nFrutasComidasCima = pacman->nFrutasComidasCima;
+    pacManClone->nColisoesParedeCima = pacman->nColisoesParedeCima;
+    pacManClone->nMovimentosEsquerda = pacman->nMovimentosEsquerda;
+    pacManClone->nFrutasComidasEsquerda = pacman->nFrutasComidasEsquerda;
+    pacManClone->nColisoesParedeEsquerda = pacman->nColisoesParedeEsquerda;
+    pacManClone->nMovimentosDireita = pacman->nMovimentosDireita;
+    pacManClone->nFrutasComidasDireita = pacman->nFrutasComidasDireita;
+    pacManClone->nColisoesParedeDireita = pacman->nColisoesParedeDireita;
+    pacManClone->nMovimentosSignificativos = pacman->nMovimentosSignificativos;
+    pacManClone->nLinhasTrilha = pacman->nLinhasTrilha;
+    pacManClone->nColunasTrilha = pacman->nColunasTrilha;
+    return pacManClone;
 }
 
 tMovimento **ClonaHistoricoDeMovimentosSignificativosPacman(tPacman *pacman) {}
 
-tPosicao *ObtemPosicaoPacman(tPacman *pacman) {}
+tPosicao *ObtemPosicaoPacman(tPacman *pacman)
+{
+    return pacman->posicaoAtual;
+}
 
-int EstaVivoPacman(tPacman *pacman) {}
+int EstaVivoPacman(tPacman *pacman)
+{
+    return pacman->estaVivo;
+}
 
 void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando) {}
 
-void CriaTrilhaPacman(tPacman *pacman, int nLinhas, int nColunas) {}
+void CriaTrilhaPacman(tPacman *pacman, int nLinhas, int nColunas)
+{
+    for (int i = 0; i < nLinhas; i++)
+    {
+        for (int j = 0; j < nColunas; j++)
+        {
+            pacman->trilha[i][j] = -1;
+        }
+    }
+}
 
-void AtualizaTrilhaPacman(tPacman *pacman) {}
+void AtualizaTrilhaPacman(tPacman *pacman) {
+    pacman->trilha[pacman->posicaoAtual->linha][pacman->posicaoAtual->coluna] = ObtemNumeroAtualMovimentosPacman(pacman);
+}
 
 void SalvaTrilhaPacman(tPacman *pacman) {}
 
 void InsereNovoMovimentoSignificativoPacman(tPacman *pacman, COMANDO comando, const char *acao) {}
 
-void MataPacman(tPacman *pacman) {}
+void MataPacman(tPacman *pacman)
+{
+    pacman->estaVivo = false;
+}
 
-void DesalocaPacman(tPacman *pacman) {}
+void DesalocaPacman(tPacman *pacman)
+{
+    free(pacman->historicoDeMovimentosSignificativos);
+    free(pacman->posicaoAtual);
+    free(pacman);
+}
 
-int ObtemNumeroAtualMovimentosPacman(tPacman *pacman) {}
+int ObtemNumeroAtualMovimentosPacman(tPacman *pacman)
+{
+    return pacman->nMovimentosBaixo + pacman->nMovimentosCima + pacman->nMovimentosDireita + pacman->nMovimentosEsquerda;
+}
 
-int ObtemNumeroMovimentosSemPontuarPacman(tPacman *pacman) {}
+int ObtemNumeroMovimentosSemPontuarPacman(tPacman *pacman)
+{
+    return (pacman->nMovimentosBaixo + pacman->nMovimentosCima + pacman->nMovimentosDireita + pacman->nMovimentosEsquerda) - (pacman->nFrutasComidasBaixo + pacman->nFrutasComidasCima + pacman->nFrutasComidasDireita + pacman->nFrutasComidasEsquerda);
+}
 
-int ObtemNumeroColisoesParedePacman(tPacman *pacman) {}
+int ObtemNumeroColisoesParedePacman(tPacman *pacman)
+{
+    return pacman->nColisoesParedeBaixo + pacman->nColisoesParedeCima + pacman->nColisoesParedeDireita + pacman->nColisoesParedeEsquerda;
+}
 
-int ObtemNumeroMovimentosBaixoPacman(tPacman *pacman) {}
+int ObtemNumeroMovimentosBaixoPacman(tPacman *pacman)
+{
+    return pacman->nMovimentosBaixo;
+}
 
-int ObtemNumeroFrutasComidasBaixoPacman(tPacman *pacman) {}
+int ObtemNumeroFrutasComidasBaixoPacman(tPacman *pacman)
+{
+    return pacman->nFrutasComidasBaixo;
+}
 
-int ObtemNumeroColisoesParedeBaixoPacman(tPacman *pacman) {}
+int ObtemNumeroColisoesParedeBaixoPacman(tPacman *pacman)
+{
+    return pacman->nColisoesParedeBaixo;
+}
 
-int ObtemNumeroMovimentosCimaPacman(tPacman *pacman) {}
+int ObtemNumeroMovimentosCimaPacman(tPacman *pacman)
+{
+    return pacman->nMovimentosCima;
+}
 
-int ObtemNumeroFrutasComidasCimaPacman(tPacman *pacman) {}
+int ObtemNumeroFrutasComidasCimaPacman(tPacman *pacman)
+{
+    return pacman->nFrutasComidasCima;
+}
 
-int ObtemNumeroColisoesParedeCimaPacman(tPacman *pacman) {}
+int ObtemNumeroColisoesParedeCimaPacman(tPacman *pacman)
+{
+    return pacman->nColisoesParedeCima;
+}
 
-int ObtemNumeroMovimentosEsquerdaPacman(tPacman *pacman) {}
+int ObtemNumeroMovimentosEsquerdaPacman(tPacman *pacman)
+{
+    return pacman->nMovimentosEsquerda;
+}
 
-int ObtemNumeroFrutasComidasEsquerdaPacman(tPacman *pacman) {}
+int ObtemNumeroFrutasComidasEsquerdaPacman(tPacman *pacman)
+{
+    return pacman->nFrutasComidasEsquerda;
+}
 
-int ObtemNumeroColisoesParedeEsquerdaPacman(tPacman *pacman) {}
+int ObtemNumeroColisoesParedeEsquerdaPacman(tPacman *pacman)
+{
+    return pacman->nColisoesParedeEsquerda;
+}
 
-int ObtemNumeroMovimentosDireitaPacman(tPacman *pacman) {}
+int ObtemNumeroMovimentosDireitaPacman(tPacman *pacman)
+{
+    return pacman->nMovimentosDireita;
+}
 
-int ObtemNumeroFrutasComidasDireitaPacman(tPacman *pacman) {}
+int ObtemNumeroFrutasComidasDireitaPacman(tPacman *pacman)
+{
+    return pacman->nFrutasComidasDireita;
+}
 
-int ObtemNumeroColisoesParedeDireitaPacman(tPacman *pacman) {}
+int ObtemNumeroColisoesParedeDireitaPacman(tPacman *pacman)
+{
+    return pacman->nColisoesParedeDireita;
+}
 
-int ObtemNumeroMovimentosSignificativosPacman(tPacman *pacman) {}
+int ObtemNumeroMovimentosSignificativosPacman(tPacman *pacman)
+{
+    return pacman->nMovimentosSignificativos;
+}
 
-int ObtemPontuacaoAtualPacman(tPacman *pacman) {}
+int ObtemPontuacaoAtualPacman(tPacman *pacman)
+{
+    return (pacman->nFrutasComidasBaixo + pacman->nFrutasComidasCima + pacman->nFrutasComidasDireita + pacman->nFrutasComidasEsquerda);
+}

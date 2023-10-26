@@ -43,7 +43,8 @@ void inicializarJogo(const char *diretorio)
     }
 
     posicaoPacMan = ObtemPosicaoItemMapa(mapa, charPacMan);
-    // pacMan = CriaPacman(posicaoPacMan);
+    
+    pacMan = CriaPacman(posicaoPacMan);
     
     fprintf(arquivo, "Pac-Man comecara o jogo na linha %d e coluna %d\n", posicaoPacMan->linha + 1, posicaoPacMan->coluna + 1);
 
@@ -54,14 +55,14 @@ void inicializarJogo(const char *diretorio)
 
 int main(int argv, char *caminhoConfig[])
 {
-    if (argv < 2) // caso o diretorio nao seja informado
-    {
-        printf("ERRO: O diretorio de arquivos de configuracao nao foi informado\n");
-        return 1;
-    }
+    // if (argv < 2) // caso o diretorio nao seja informado
+    // {
+    //     printf("ERRO: O diretorio de arquivos de configuracao nao foi informado\n");
+    //     return 1;
+    // }
     char diretorio[maxCaminho];
-    strcpy(diretorio, caminhoConfig[1]);
-    // strcpy(diretorio, "template-TP-1-etapa-1/Casos/01");
+    // strcpy(diretorio, caminhoConfig[1]);
+    strcpy(diretorio, "template-TP-1-etapa-1/Casos/01");
     inicializarJogo(diretorio);
     return 0;
 }

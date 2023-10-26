@@ -60,7 +60,8 @@ tMapa *CriaMapa(const char *caminhoConfig)
             colunaAtual++;
             mapa->grid[mapa->nLinhas] = (char *)realloc(mapa->grid[mapa->nLinhas], mapa->nColunas + 1);
         }
-        if(acabou){
+        if (acabou)
+        {
             break;
         }
         colunaAtual = 0;
@@ -112,19 +113,22 @@ tMapa *CriaMapa(const char *caminhoConfig)
 
 tPosicao *ObtemPosicaoItemMapa(tMapa *mapa, char item)
 {
-    tPosicao *posicaoItem;
+
     for (int i = 0; i < mapa->nLinhas; i++)
     {
         for (int j = 0; j < mapa->nColunas; j++)
         {
             if (mapa->grid[i][j] == item)
             {
+                tPosicao *posicaoItem;
+                posicaoItem = CriaPosicao(i, j);
                 posicaoItem->linha = i;
                 posicaoItem->coluna = j;
+                return posicaoItem;
             }
         }
     }
-    return posicaoItem;
+    return NULL;
 }
 
 tTunel *ObtemTunelMapa(tMapa *mapa)

@@ -10,18 +10,17 @@ typedef struct tFantasma{
 
     /* Verifica se existe o tipo de Fantasma */
     int existeFantasma;
-    char tipo;
     int direção;
 
 } tFantasma;
 
 tFantasma** criaFantasmas(tMapa mapa);
 
-void *achaFantasma(tFantasma *fantasma[4], char tipo, int linha, int coluna);
+void achaFantasma(tFantasma *fantasma[4], int tipo, int linha, int coluna);
 
-void *movimentaFantasma(tFantasma *fantasma, tMapa mapa);
+void movimentaFantasma(tFantasma *fantasma, tMapa mapa);
 
-void *movimentaDireções(tFantasma *fantasma);
+void movimentaDirecoes(tFantasma *fantasma);
 
 void desalocaFantasma(tFantasma *fantasma[4]);
 
