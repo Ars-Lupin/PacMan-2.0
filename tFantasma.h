@@ -1,5 +1,5 @@
-#ifndef TPACMAN_H_
-#define TPACMAN_H_
+#ifndef TFANTASMA_H_
+#define TFANTASMA_H_
 
 #include "tPosicao.h"
 #include "tMapa.h"
@@ -11,14 +11,16 @@ typedef struct tFantasma{
     /* Verifica se existe o tipo de Fantasma */
     int existeFantasma;
     int direção;
+    char tipo;
+    char passoFantasma;
 
 } tFantasma;
 
-tFantasma** criaFantasmas(tMapa mapa);
+tFantasma** criaFantasmas(tMapa *mapa);
 
 void achaFantasma(tFantasma *fantasma[4], int tipo, int linha, int coluna);
 
-void movimentaFantasma(tFantasma *fantasma, tMapa mapa);
+void movimentaFantasma(tFantasma *fantasma, tMapa *mapa);
 
 void movimentaDirecoes(tFantasma *fantasma);
 

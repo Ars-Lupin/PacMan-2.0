@@ -13,7 +13,9 @@ tMapa *CriaMapa(const char *caminhoConfig)
     char caminhoMapa[maxCaminho];
     char caracter;
     bool acabou;
+    int tunel1Coluna = -1, tunel1Linha = -1, tunel2Coluna = -1, tunel2Linha = -1;
     tMapa *mapa = malloc(sizeof(tMapa)); // Aloca a estrutura do mapa
+    mapa->tunel = (tTunel *)malloc(sizeof(tTunel));
 
     sprintf(caminhoMapa, "%s/mapa.txt", caminhoConfig);
 
@@ -81,20 +83,24 @@ tMapa *CriaMapa(const char *caminhoConfig)
         {
             if ((mapa->grid[i][j] == '@') && (cont = 0))
             {
-                mapa->tunel->acesso1->linha = i;
-                mapa->tunel->acesso1->coluna = j;
+                tunel1Linha = i;
+                tunel1Coluna = j;
                 cont++;
             }
             else if ((mapa->grid[i][j] == '@') && (cont = 1))
             {
-                mapa->tunel->acesso2->linha = i;
-                mapa->tunel->acesso2->coluna = j;
-            }
-            else
-            {
-                mapa->tunel = NULL;
+                tunel2Linha = i;
+                tunel2Coluna = j;
             }
         }
+    }
+    if (tunel1Linha > 0)
+    {
+        mapa->tunel = CriaTunel(tunel1Linha, tunel1Coluna, tunel2Linha, tunel2Coluna);
+    }
+    else if (tunel1Linha < 0)
+    {
+        mapa->tunel = NULL;
     }
 
     // Obtem o número de frutas do mapa
@@ -222,5 +228,6 @@ void DesalocaMapa(tMapa *mapa)
         free(mapa->grid[i]);
     }
     free(mapa->grid);
+    free(mapa->tunel);
     free(mapa);
 }

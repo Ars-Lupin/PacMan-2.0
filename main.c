@@ -7,6 +7,7 @@
 #include "tMovimento.h"
 #include "tTunel.h"
 #include "tPosicao.h"
+#include "tFantasma.h"
 
 #define maxCaminho 1001 // Tamanho maximo do diretorio
 
@@ -16,9 +17,59 @@
 
 // void geraRanking{}
 
-// void realizaJogo{}
+void imprimeSaida(tMapa *mapa, char jogada, int pontos)
+{
+        printf("Estado do jogo apos o movimento '%c':\n", jogada);
+        for (int i = 0; i < mapa->nLinhas; i++)
+        {
+            printf("%s\n", mapa->grid[i]);
+        }
+        printf("Pontuacao: %d\n\n", pontos);
+    
+}
 
-// void imprimeSaida{}
+void realizaJogo(tMapa *mapa, tPacman *pacMan)
+{
+    tFantasma **fantasma;
+    int nLinhas, nColunas;
+    char jogada;
+    COMANDO comando;
+    nLinhas = ObtemNumeroLinhasMapa(mapa);
+    nColunas = ObtemNumeroColunasMapa(mapa);
+    fantasma = criaFantasmas(mapa);
+    CriaTrilhaPacman(pacMan, nLinhas, nColunas);
+    while (1)
+    {
+        AtualizaTrilhaPacman(pacMan);
+        scanf(" %c", &jogada);
+        if (jogada == 'w')
+        {
+            comando = MOV_CIMA;
+        }
+        else if (jogada == 'a')
+        {
+            comando = MOV_ESQUERDA;
+        }
+        else if (jogada == 's')
+        {
+            comando = MOV_BAIXO;
+        }
+        else if (jogada == 'd')
+        {
+            comando = MOV_DIREITA;
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            if (fantasma[i]->existeFantasma)
+            {
+                movimentaFantasma(fantasma[i], mapa);
+            }
+        }
+        int pontos = ObtemPontuacaoAtualPacman(pacMan);
+        MovePacman(pacMan, mapa, comando);
+        imprimeSaida(mapa, jogada, pontos);
+    }
+}
 
 void inicializarJogo(const char *diretorio)
 {
@@ -43,13 +94,13 @@ void inicializarJogo(const char *diretorio)
     }
 
     posicaoPacMan = ObtemPosicaoItemMapa(mapa, charPacMan);
-    
+
     pacMan = CriaPacman(posicaoPacMan);
-    
+
     fprintf(arquivo, "Pac-Man comecara o jogo na linha %d e coluna %d\n", posicaoPacMan->linha + 1, posicaoPacMan->coluna + 1);
 
     fclose(arquivo);
-    // RealizaJogo(diretorio, mapa);
+    realizaJogo(mapa, pacMan);
     DesalocaMapa(mapa);
 }
 

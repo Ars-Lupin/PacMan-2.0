@@ -15,7 +15,7 @@
 #define BAI -11
 #define CIM 11
 
-tFantasma **criaFantasmas(tMapa mapa)
+tFantasma **criaFantasmas(tMapa *mapa)
 {
     int tamanho = 4;
     tFantasma **fantasma = (tFantasma **)malloc(tamanho * sizeof(tFantasma *));
@@ -26,32 +26,45 @@ tFantasma **criaFantasmas(tMapa mapa)
         fantasma[i] = (tFantasma *)malloc(sizeof(tFantasma));
     }
 
-    for (int i = 0; i < mapa.nLinhas; i++)
+    fantasma[B]->direção = ESQ;
+    fantasma[P]->direção = CIM;
+    fantasma[I]->direção = BAI;
+    fantasma[C]->direção = DIR;
+    fantasma[B]->existeFantasma = false;
+    fantasma[P]->existeFantasma = false;
+    fantasma[I]->existeFantasma = false;
+    fantasma[C]->existeFantasma = false;
+    fantasma[B]->tipo = 'B';
+    fantasma[P]->tipo = 'P';
+    fantasma[I]->tipo = 'I';
+    fantasma[C]->tipo = 'C';
+    fantasma[B]->passoFantasma = ' ';
+    fantasma[P]->passoFantasma = ' ';
+    fantasma[I]->passoFantasma = ' ';
+    fantasma[C]->passoFantasma = ' ';
+
+    for (int i = 0; i < mapa->nLinhas; i++)
     {
-        for (int j = 0; j < mapa.nColunas; j++)
+        for (int j = 0; j < mapa->nColunas; j++)
         {
-            if (mapa.grid[i][j] == 'B')
+            if (mapa->grid[i][j] == 'B')
             {
                 tipo = B;
-                tipo = mapa.grid[i][j];
                 achaFantasma(fantasma, tipo, i, j);
             }
-            else if (mapa.grid[i][j] == 'P')
+            else if (mapa->grid[i][j] == 'P')
             {
                 tipo = P;
-                tipo = mapa.grid[i][j];
                 achaFantasma(fantasma, tipo, i, j);
             }
-            else if (mapa.grid[i][j] == 'I')
+            else if (mapa->grid[i][j] == 'I')
             {
                 tipo = I;
-                tipo = mapa.grid[i][j];
                 achaFantasma(fantasma, tipo, i, j);
             }
-            else if (mapa.grid[i][j] == 'C')
+            else if (mapa->grid[i][j] == 'C')
             {
                 tipo = C;
-                tipo = mapa.grid[i][j];
                 achaFantasma(fantasma, tipo, i, j);
             }
         }
@@ -60,26 +73,30 @@ tFantasma **criaFantasmas(tMapa mapa)
     return fantasma;
 }
 
-void achaFantasma(tFantasma *fantasma[4], int tipo, int linha, int coluna)
+void achaFantasma(tFantasma **fantasma, int tipo, int linha, int coluna)
 {
+    int i;
     fantasma[tipo]->posicaoAtual = (tPosicao *)malloc(sizeof(tPosicao));
-    fantasma[tipo]->existeFantasma = 1;
+    fantasma[tipo]->existeFantasma = true;
     fantasma[tipo]->posicaoAtual->linha = linha;
     fantasma[tipo]->posicaoAtual->coluna = coluna;
 }
 
-void movimentaFantasma(tFantasma *fantasma, tMapa mapa)
+void movimentaFantasma(tFantasma *fantasma, tMapa *mapa)
 {
     int i = 0;
+    AtualizaItemMapa(mapa, fantasma->posicaoAtual, fantasma->passoFantasma);
     movimentaDirecoes(fantasma);
-    if (mapa.grid[fantasma->posicaoAtual->linha][fantasma->posicaoAtual->coluna] == '#')
+    fantasma->passoFantasma = ObtemItemMapa(mapa, fantasma->posicaoAtual);
+    if (EncontrouParedeMapa(mapa, fantasma->posicaoAtual))
     {
         fantasma->direção = fantasma->direção * -1;
-        for (int i = 0; i < 2; i++)
-        {
-            movimentaDirecoes(fantasma);
-        }
+        movimentaDirecoes(fantasma);
+        AtualizaItemMapa(mapa, fantasma->posicaoAtual, fantasma->passoFantasma);
+        movimentaDirecoes(fantasma);
+        fantasma->passoFantasma = ObtemItemMapa(mapa, fantasma->posicaoAtual);
     }
+    AtualizaItemMapa(mapa, fantasma->posicaoAtual, fantasma->tipo);
 }
 
 void movimentaDirecoes(tFantasma *fantasma)
