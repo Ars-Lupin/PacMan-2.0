@@ -26,10 +26,10 @@ tFantasma **criaFantasmas(tMapa *mapa)
         fantasma[i] = (tFantasma *)malloc(sizeof(tFantasma));
     }
 
-    fantasma[B]->direção = ESQ;
-    fantasma[P]->direção = CIM;
-    fantasma[I]->direção = BAI;
-    fantasma[C]->direção = DIR;
+    fantasma[B]->direcao = ESQ;
+    fantasma[P]->direcao = CIM;
+    fantasma[I]->direcao = BAI;
+    fantasma[C]->direcao = DIR;
     fantasma[B]->existeFantasma = false;
     fantasma[P]->existeFantasma = false;
     fantasma[I]->existeFantasma = false;
@@ -90,7 +90,7 @@ void movimentaFantasma(tFantasma *fantasma, tMapa *mapa)
     fantasma->passoFantasma = ObtemItemMapa(mapa, fantasma->posicaoAtual);
     if (EncontrouParedeMapa(mapa, fantasma->posicaoAtual))
     {
-        fantasma->direção = fantasma->direção * -1;
+        fantasma->direcao = fantasma->direcao * -1;
         movimentaDirecoes(fantasma);
         AtualizaItemMapa(mapa, fantasma->posicaoAtual, fantasma->passoFantasma);
         movimentaDirecoes(fantasma);
@@ -101,19 +101,19 @@ void movimentaFantasma(tFantasma *fantasma, tMapa *mapa)
 
 void movimentaDirecoes(tFantasma *fantasma)
 {
-    if (fantasma->direção == DIR)
+    if (fantasma->direcao == DIR)
     {
         fantasma->posicaoAtual->coluna++;
     }
-    else if (fantasma->direção == ESQ)
+    else if (fantasma->direcao == ESQ)
     {
         fantasma->posicaoAtual->coluna--;
     }
-    else if (fantasma->direção == CIM)
+    else if (fantasma->direcao == CIM)
     {
         fantasma->posicaoAtual->linha++;
     }
-    else if (fantasma->direção == BAI)
+    else if (fantasma->direcao == BAI)
     {
         fantasma->posicaoAtual->linha--;
     }

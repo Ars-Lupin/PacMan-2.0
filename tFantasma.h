@@ -10,7 +10,7 @@ typedef struct tFantasma{
 
     /* Verifica se existe o tipo de Fantasma */
     int existeFantasma;
-    int direção;
+    int direcao;
     char tipo;
     char passoFantasma;
 
