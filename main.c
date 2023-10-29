@@ -8,6 +8,7 @@
 #include "tTunel.h"
 #include "tPosicao.h"
 #include "tFantasma.h"
+#include "tJogo.h"
 
 #define maxCaminho 1001 // Tamanho maximo do diretorio
 
@@ -17,27 +18,19 @@
 
 // void geraRanking{}
 
-void imprimeSaida(tMapa *mapa, char jogada, int pontos)
-{
-        printf("Estado do jogo apos o movimento '%c':\n", jogada);
-        for (int i = 0; i < mapa->nLinhas; i++)
-        {
-            printf("%s\n", mapa->grid[i]);
-        }
-        printf("Pontuacao: %d\n\n", pontos);
-    
-}
-
 void realizaJogo(tMapa *mapa, tPacman *pacMan)
 {
     tFantasma **fantasma;
-    int nLinhas, nColunas;
+    tPosicao *rastroPacman;
+    int nLinhas, nColunas, i;
     char jogada;
     COMANDO comando;
     nLinhas = ObtemNumeroLinhasMapa(mapa);
     nColunas = ObtemNumeroColunasMapa(mapa);
     fantasma = criaFantasmas(mapa);
     CriaTrilhaPacman(pacMan, nLinhas, nColunas);
+    inicializaFantasmas(fantasma, mapa);
+
     while (1)
     {
         AtualizaTrilhaPacman(pacMan);
@@ -58,16 +51,22 @@ void realizaJogo(tMapa *mapa, tPacman *pacMan)
         {
             comando = MOV_DIREITA;
         }
-        for (int i = 0; i < 4; i++)
+
+        rastroPacman = ClonaPosicao(pacMan->posicaoAtual);
+        MovePacman(pacMan, mapa, comando);
+        for (i = 0; i < 4; i++)
         {
             if (fantasma[i]->existeFantasma)
             {
                 movimentaFantasma(fantasma[i], mapa);
             }
         }
-        int pontos = ObtemPontuacaoAtualPacman(pacMan);
-        MovePacman(pacMan, mapa, comando);
-        imprimeSaida(mapa, jogada, pontos);
+
+        if (verificaFimDeJogo(mapa, pacMan, fantasma, comando, rastroPacman))
+        {
+            break;
+        }
+        devolveItem(fantasma, mapa);
     }
 }
 
@@ -76,6 +75,7 @@ void inicializarJogo(const char *diretorio)
     char caminho_inicializacao[maxCaminho];
     char caminho_mapa[maxCaminho];
     char charPacMan = '>';
+    int i;
     tPosicao *posicaoPacMan;
     tPacman *pacMan;
     tMapa *mapa;
@@ -88,7 +88,7 @@ void inicializarJogo(const char *diretorio)
         exit(1);
     }
 
-    for (int i = 0; i < mapa->nLinhas; i++)
+    for (i = 0; i < mapa->nLinhas; i++)
     {
         fprintf(arquivo, "%s\n", mapa->grid[i]);
     }
@@ -113,7 +113,7 @@ int main(int argv, char *caminhoConfig[])
     // }
     char diretorio[maxCaminho];
     // strcpy(diretorio, caminhoConfig[1]);
-    strcpy(diretorio, "template-TP-1-etapa-1/Casos/01");
+    strcpy(diretorio, "template-TP-1-etapa-1-main/Casos/01");
     inicializarJogo(diretorio);
     return 0;
 }

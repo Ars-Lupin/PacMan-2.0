@@ -17,19 +17,19 @@
 
 tFantasma **criaFantasmas(tMapa *mapa)
 {
-    int tamanho = 4;
+    int tamanho = 4, i, j;
     tFantasma **fantasma = (tFantasma **)malloc(tamanho * sizeof(tFantasma *));
     int tipo;
 
-    for (int i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++)
     {
         fantasma[i] = (tFantasma *)malloc(sizeof(tFantasma));
     }
 
-    fantasma[B]->direção = ESQ;
-    fantasma[P]->direção = CIM;
-    fantasma[I]->direção = BAI;
-    fantasma[C]->direção = DIR;
+    fantasma[B]->direcao = ESQ;
+    fantasma[P]->direcao = CIM;
+    fantasma[I]->direcao = BAI;
+    fantasma[C]->direcao = DIR;
     fantasma[B]->existeFantasma = false;
     fantasma[P]->existeFantasma = false;
     fantasma[I]->existeFantasma = false;
@@ -38,14 +38,10 @@ tFantasma **criaFantasmas(tMapa *mapa)
     fantasma[P]->tipo = 'P';
     fantasma[I]->tipo = 'I';
     fantasma[C]->tipo = 'C';
-    fantasma[B]->passoFantasma = ' ';
-    fantasma[P]->passoFantasma = ' ';
-    fantasma[I]->passoFantasma = ' ';
-    fantasma[C]->passoFantasma = ' ';
 
-    for (int i = 0; i < mapa->nLinhas; i++)
+    for (i = 0; i < mapa->nLinhas; i++)
     {
-        for (int j = 0; j < mapa->nColunas; j++)
+        for (j = 0; j < mapa->nColunas; j++)
         {
             if (mapa->grid[i][j] == 'B')
             {
@@ -77,6 +73,7 @@ void achaFantasma(tFantasma **fantasma, int tipo, int linha, int coluna)
 {
     int i;
     fantasma[tipo]->posicaoAtual = (tPosicao *)malloc(sizeof(tPosicao));
+    fantasma[tipo]->posicaoAntiga = (tPosicao *)malloc(sizeof(tPosicao));
     fantasma[tipo]->existeFantasma = true;
     fantasma[tipo]->posicaoAtual->linha = linha;
     fantasma[tipo]->posicaoAtual->coluna = coluna;
@@ -85,12 +82,16 @@ void achaFantasma(tFantasma **fantasma, int tipo, int linha, int coluna)
 void movimentaFantasma(tFantasma *fantasma, tMapa *mapa)
 {
     int i = 0;
-    AtualizaItemMapa(mapa, fantasma->posicaoAtual, fantasma->passoFantasma);
+    fantasma->posicaoAntiga = ClonaPosicao(fantasma->posicaoAtual);
     movimentaDirecoes(fantasma);
-    fantasma->passoFantasma = ObtemItemMapa(mapa, fantasma->posicaoAtual);
+    if (EncontrouParedeMapa(mapa, fantasma->posicaoAtual) == false)
+    {
+        fantasma->passoFantasma = ObtemItemMapa(mapa, fantasma->posicaoAtual);
+    }
+
     if (EncontrouParedeMapa(mapa, fantasma->posicaoAtual))
     {
-        fantasma->direção = fantasma->direção * -1;
+        fantasma->direcao = fantasma->direcao * -1;
         movimentaDirecoes(fantasma);
         AtualizaItemMapa(mapa, fantasma->posicaoAtual, fantasma->passoFantasma);
         movimentaDirecoes(fantasma);
@@ -99,29 +100,64 @@ void movimentaFantasma(tFantasma *fantasma, tMapa *mapa)
     AtualizaItemMapa(mapa, fantasma->posicaoAtual, fantasma->tipo);
 }
 
+void devolveItem(tFantasma **fantasma, tMapa *mapa)
+{
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (fantasma[i]->existeFantasma)
+        {
+            AtualizaItemMapa(mapa, fantasma[i]->posicaoAtual, fantasma[i]->passoFantasma);
+        }
+    }
+}
+
+void inicializaFantasmas(tFantasma **fantasma, tMapa *mapa)
+{
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        if (fantasma[i]->existeFantasma)
+        {
+            fantasma[i]->passoFantasma = ' ';
+            AtualizaItemMapa(mapa, fantasma[i]->posicaoAtual, fantasma[i]->passoFantasma);
+        }
+    }
+}
+
 void movimentaDirecoes(tFantasma *fantasma)
 {
-    if (fantasma->direção == DIR)
+    if (fantasma->direcao == DIR)
     {
         fantasma->posicaoAtual->coluna++;
     }
-    else if (fantasma->direção == ESQ)
+    else if (fantasma->direcao == ESQ)
     {
         fantasma->posicaoAtual->coluna--;
     }
-    else if (fantasma->direção == CIM)
+    else if (fantasma->direcao == CIM)
     {
         fantasma->posicaoAtual->linha++;
     }
-    else if (fantasma->direção == BAI)
+    else if (fantasma->direcao == BAI)
     {
         fantasma->posicaoAtual->linha--;
     }
 }
 
-void desalocaFantasma(tFantasma *fantasma[4])
+void imprimeFantasmas(tMapa *mapa, tFantasma **fantasmas)
 {
-    for (int i = 0; i < 4; i++)
+    int i;
+    for (i = 0; i < 4; i++)
+    {
+        AtualizaItemMapa(mapa, fantasmas[i]->posicaoAtual, fantasmas[i]->tipo);
+    }
+}
+
+void desalocaFantasma(tFantasma **fantasma)
+{
+    int i;
+    for (i = 0; i < 4; i++)
     {
         free(fantasma[i]);
     }

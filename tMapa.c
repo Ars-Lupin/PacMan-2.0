@@ -13,7 +13,7 @@ tMapa *CriaMapa(const char *caminhoConfig)
     char caminhoMapa[maxCaminho];
     char caracter;
     bool acabou;
-    int tunel1Coluna = -1, tunel1Linha = -1, tunel2Coluna = -1, tunel2Linha = -1;
+    int tunel1Coluna = -1, tunel1Linha = -1, tunel2Coluna = -1, tunel2Linha = -1, i, j;
     tMapa *mapa = malloc(sizeof(tMapa)); // Aloca a estrutura do mapa
     mapa->tunel = (tTunel *)malloc(sizeof(tTunel));
 
@@ -77,9 +77,9 @@ tMapa *CriaMapa(const char *caminhoConfig)
 
     // Acha se tiver tem tuneis e quais suas posições
     int cont;
-    for (int i = 0; i < mapa->nLinhas; i++)
+    for (i = 0; i < mapa->nLinhas; i++)
     {
-        for (int j = 0; j < mapa->nColunas; j++)
+        for (j = 0; j < mapa->nColunas; j++)
         {
             if ((mapa->grid[i][j] == '@') && (cont = 0))
             {
@@ -104,9 +104,9 @@ tMapa *CriaMapa(const char *caminhoConfig)
     }
 
     // Obtem o número de frutas do mapa
-    for (int i = 0; i < mapa->nLinhas; i++)
+    for (i = 0; i < mapa->nLinhas; i++)
     {
-        for (int j = 0; j < mapa->nColunas; j++)
+        for (j = 0; j < mapa->nColunas; j++)
         {
             if (mapa->grid[i][j] == '*')
             {
@@ -119,10 +119,10 @@ tMapa *CriaMapa(const char *caminhoConfig)
 
 tPosicao *ObtemPosicaoItemMapa(tMapa *mapa, char item)
 {
-
-    for (int i = 0; i < mapa->nLinhas; i++)
+    int i, j;
+    for (i = 0; i < mapa->nLinhas; i++)
     {
-        for (int j = 0; j < mapa->nColunas; j++)
+        for (j = 0; j < mapa->nColunas; j++)
         {
             if (mapa->grid[i][j] == item)
             {
@@ -223,7 +223,8 @@ void EntraTunelMapa(tMapa *mapa, tPosicao *posicao)
 
 void DesalocaMapa(tMapa *mapa)
 {
-    for (int i = 0; i < mapa->nLinhas; i++)
+    int i;
+    for (i = 0; i < mapa->nLinhas; i++)
     {
         free(mapa->grid[i]);
     }

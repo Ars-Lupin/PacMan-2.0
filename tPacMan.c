@@ -80,7 +80,6 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
 
     strcpy(comida, "pegou comida");
     strcpy(parede, "colidiu com a parede");
-    strcpy(fantasma, "fim de jogo por encostar em um fantasma");
 
     AtualizaItemMapa(mapa, pacman->posicaoAtual, limpa);
 
@@ -141,7 +140,7 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
         pacman->posicaoAtual->coluna--;
         if (EncontrouParedeMapa(mapa, pacman->posicaoAtual))
         {
-            pacman->posicaoAtual->linha++;
+            pacman->posicaoAtual->coluna++;
             pacman->nColisoesParedeEsquerda++;
             InsereNovoMovimentoSignificativoPacman(pacman, comando, parede);
         }
@@ -157,15 +156,16 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
 
 void CriaTrilhaPacman(tPacman *pacman, int nLinhas, int nColunas)
 {
+    int i, j;
     pacman->trilha = (int **)malloc(nLinhas * sizeof(int *));
-    for (int i = 0; i < nLinhas; i++)
+    for (i = 0; i < nLinhas; i++)
     {
         pacman->trilha[i] = (int *)malloc(nColunas * sizeof(int));
     }
 
-    for (int i = 0; i < nLinhas; i++)
+    for (i = 0; i < nLinhas; i++)
     {
-        for (int j = 0; j < nColunas; j++)
+        for (j = 0; j < nColunas; j++)
         {
             pacman->trilha[i][j] = -1;
         }
@@ -179,7 +179,13 @@ void AtualizaTrilhaPacman(tPacman *pacman)
 
 void SalvaTrilhaPacman(tPacman *pacman) {}
 
-void InsereNovoMovimentoSignificativoPacman(tPacman *pacman, COMANDO comando, const char *acao) {}
+void InsereNovoMovimentoSignificativoPacman(tPacman *pacman, COMANDO comando, const char *acao)
+{
+    int movimento = ObtemNumeroAtualMovimentosPacman(pacman);
+    pacman->historicoDeMovimentosSignificativos = (tMovimento **)malloc((pacman->nMovimentosSignificativos + 1) * sizeof(tMovimento *));
+    pacman->historicoDeMovimentosSignificativos[pacman->nMovimentosSignificativos] = CriaMovimento(movimento, comando, acao);
+    pacman->nMovimentosSignificativos++;
+}
 
 void MataPacman(tPacman *pacman)
 {
