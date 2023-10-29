@@ -30,7 +30,7 @@ void inicializaFantasmas(tFantasma **fantasma, tMapa *mapa);
 
 void movimentaDirecoes(tFantasma *fantasma);
 
-void desalocaFantasma(tFantasma *fantasma[4]);
+void desalocaFantasma(tFantasma **fantasma);
 
 void imprimeFantasmas(tMapa *mapa, tFantasma **fantasmas);
 

@@ -33,7 +33,7 @@ tPacman *CriaPacman(tPosicao *posicao)
 
 tPacman *ClonaPacman(tPacman *pacman)
 {
-    tPacman *pacManClone = malloc(sizeof(tPacman));
+    tPacman *pacManClone = malloc(sizeof(tPacman)); // Aloca a estrutura do Pacman
     pacManClone->posicaoAtual = (tPosicao *)malloc(sizeof(tPosicao));
     pacManClone->historicoDeMovimentosSignificativos = (tMovimento **)malloc(sizeof(tMovimento *));
 
@@ -157,6 +157,8 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
 void CriaTrilhaPacman(tPacman *pacman, int nLinhas, int nColunas)
 {
     int i, j;
+    pacman->nLinhasTrilha = nLinhas;
+    pacman->nColunasTrilha = nColunas;
     pacman->trilha = (int **)malloc(nLinhas * sizeof(int *));
     for (i = 0; i < nLinhas; i++)
     {
@@ -169,6 +171,7 @@ void CriaTrilhaPacman(tPacman *pacman, int nLinhas, int nColunas)
         {
             pacman->trilha[i][j] = -1;
         }
+        printf("\n");
     }
 }
 
@@ -177,12 +180,32 @@ void AtualizaTrilhaPacman(tPacman *pacman)
     pacman->trilha[pacman->posicaoAtual->linha][pacman->posicaoAtual->coluna] = ObtemNumeroAtualMovimentosPacman(pacman);
 }
 
-void SalvaTrilhaPacman(tPacman *pacman) {}
+void SalvaTrilhaPacman(tPacman *pacman)
+{
+    FILE *fTrilha = fopen("trilha.txt", "w");
+    int i, j;
+    for (i = 0; i < pacman->nLinhasTrilha; i++)
+    {
+        for (j = 0; j < pacman->nColunasTrilha; j++)
+        {
+            if (pacman->trilha[i][j] == -1)
+            {
+                fprintf(fTrilha,"# ");
+            }
+            else
+            {
+                fprintf(fTrilha, "%d ", pacman->trilha[i][j]);
+            }
+        }
+        fprintf(fTrilha, "\n");
+    }
+    fclose(fTrilha);
+}
 
 void InsereNovoMovimentoSignificativoPacman(tPacman *pacman, COMANDO comando, const char *acao)
 {
     int movimento = ObtemNumeroAtualMovimentosPacman(pacman);
-    pacman->historicoDeMovimentosSignificativos = (tMovimento **)malloc((pacman->nMovimentosSignificativos + 1) * sizeof(tMovimento *));
+    pacman->historicoDeMovimentosSignificativos = (tMovimento **)realloc(pacman->historicoDeMovimentosSignificativos, (pacman->nMovimentosSignificativos + 1) * sizeof(tMovimento *));
     pacman->historicoDeMovimentosSignificativos[pacman->nMovimentosSignificativos] = CriaMovimento(movimento, comando, acao);
     pacman->nMovimentosSignificativos++;
 }
@@ -194,8 +217,18 @@ void MataPacman(tPacman *pacman)
 
 void DesalocaPacman(tPacman *pacman)
 {
+    int i;
+    for (i = 0; i < pacman->nMovimentosSignificativos; i++)
+    {
+        DesalocaMovimento(pacman->historicoDeMovimentosSignificativos[i]);
+    }
+    for (i = 0; i < pacman->nLinhasTrilha; i++)
+    {
+        free(pacman->trilha[i]);
+    }
     free(pacman->historicoDeMovimentosSignificativos);
-    free(pacman->posicaoAtual);
+    free(pacman->trilha);
+    DesalocaPosicao(pacman->posicaoAtual);
     free(pacman);
 }
 

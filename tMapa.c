@@ -14,8 +14,7 @@ tMapa *CriaMapa(const char *caminhoConfig)
     char caracter;
     bool acabou;
     int tunel1Coluna = -1, tunel1Linha = -1, tunel2Coluna = -1, tunel2Linha = -1, i, j;
-    tMapa *mapa = malloc(sizeof(tMapa)); // Aloca a estrutura do mapa
-    mapa->tunel = (tTunel *)malloc(sizeof(tTunel));
+    tMapa *mapa = (tMapa *)malloc(sizeof(tMapa)); // Aloca a estrutura do mapa
 
     sprintf(caminhoMapa, "%s/mapa.txt", caminhoConfig);
 
@@ -126,11 +125,11 @@ tPosicao *ObtemPosicaoItemMapa(tMapa *mapa, char item)
         {
             if (mapa->grid[i][j] == item)
             {
-                tPosicao *posicaoItem;
-                posicaoItem = CriaPosicao(i, j);
-                posicaoItem->linha = i;
-                posicaoItem->coluna = j;
-                return posicaoItem;
+                // tPosicao *posicaoItem;
+                // posicaoItem = CriaPosicao(i, j);
+                // posicaoItem->linha = i;
+                // posicaoItem->coluna = j;
+                return CriaPosicao(i, j);
             }
         }
     }
@@ -223,12 +222,27 @@ void EntraTunelMapa(tMapa *mapa, tPosicao *posicao)
 
 void DesalocaMapa(tMapa *mapa)
 {
-    int i;
-    for (i = 0; i < mapa->nLinhas; i++)
+    if (mapa != NULL)
     {
-        free(mapa->grid[i]);
+        int i; 
+
+        if (mapa->grid != NULL)
+        {
+            for (i = 0; i <= mapa->nLinhas; i++)
+            {
+                if (mapa->grid[i] != NULL)
+                {
+                    free(mapa->grid[i]);
+                }
+            }
+            free(mapa->grid);
+        }
+
+        if (mapa->tunel != NULL)
+        {
+            DesalocaTunel(mapa->tunel);
+        }
+
+        free(mapa);
     }
-    free(mapa->grid);
-    free(mapa->tunel);
-    free(mapa);
 }

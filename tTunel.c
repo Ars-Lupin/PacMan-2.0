@@ -43,5 +43,5 @@ void LevaFinalTunel(tTunel *tunel, tPosicao *posicao)
 
 void DesalocaTunel(tTunel *tunel)
 {
-    free(tunel);
+        free(tunel);
 }

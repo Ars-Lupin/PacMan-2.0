@@ -24,6 +24,8 @@ tFantasma **criaFantasmas(tMapa *mapa)
     for (i = 0; i < 4; i++)
     {
         fantasma[i] = (tFantasma *)malloc(sizeof(tFantasma));
+        fantasma[i]->posicaoAtual = (tPosicao *)malloc(sizeof(tPosicao));
+        // fantasma[i]->posicaoAntiga = (tPosicao *)malloc(sizeof(tPosicao));
     }
 
     fantasma[B]->direcao = ESQ;
@@ -71,9 +73,6 @@ tFantasma **criaFantasmas(tMapa *mapa)
 
 void achaFantasma(tFantasma **fantasma, int tipo, int linha, int coluna)
 {
-    int i;
-    fantasma[tipo]->posicaoAtual = (tPosicao *)malloc(sizeof(tPosicao));
-    fantasma[tipo]->posicaoAntiga = (tPosicao *)malloc(sizeof(tPosicao));
     fantasma[tipo]->existeFantasma = true;
     fantasma[tipo]->posicaoAtual->linha = linha;
     fantasma[tipo]->posicaoAtual->coluna = coluna;
@@ -82,7 +81,6 @@ void achaFantasma(tFantasma **fantasma, int tipo, int linha, int coluna)
 void movimentaFantasma(tFantasma *fantasma, tMapa *mapa)
 {
     int i = 0;
-    fantasma->posicaoAntiga = ClonaPosicao(fantasma->posicaoAtual);
     movimentaDirecoes(fantasma);
     if (EncontrouParedeMapa(mapa, fantasma->posicaoAtual) == false)
     {
@@ -107,6 +105,10 @@ void devolveItem(tFantasma **fantasma, tMapa *mapa)
     {
         if (fantasma[i]->existeFantasma)
         {
+            if (fantasma[i]->passoFantasma = '>')
+            {
+                fantasma[i]->passoFantasma = ' ';
+            }
             AtualizaItemMapa(mapa, fantasma[i]->posicaoAtual, fantasma[i]->passoFantasma);
         }
     }
@@ -150,7 +152,10 @@ void imprimeFantasmas(tMapa *mapa, tFantasma **fantasmas)
     int i;
     for (i = 0; i < 4; i++)
     {
-        AtualizaItemMapa(mapa, fantasmas[i]->posicaoAtual, fantasmas[i]->tipo);
+        if (fantasmas[i]->existeFantasma)
+        {
+            AtualizaItemMapa(mapa, fantasmas[i]->posicaoAtual, fantasmas[i]->tipo);
+        }
     }
 }
 
@@ -159,6 +164,8 @@ void desalocaFantasma(tFantasma **fantasma)
     int i;
     for (i = 0; i < 4; i++)
     {
+        DesalocaPosicao(fantasma[i]->posicaoAtual);
         free(fantasma[i]);
     }
+    free(fantasma);
 }

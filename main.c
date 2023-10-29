@@ -52,22 +52,36 @@ void realizaJogo(tMapa *mapa, tPacman *pacMan)
             comando = MOV_DIREITA;
         }
 
-        rastroPacman = ClonaPosicao(pacMan->posicaoAtual);
-        MovePacman(pacMan, mapa, comando);
         for (i = 0; i < 4; i++)
         {
             if (fantasma[i]->existeFantasma)
             {
+                fantasma[i]->posicaoAntiga = ClonaPosicao(fantasma[i]->posicaoAtual);
                 movimentaFantasma(fantasma[i], mapa);
             }
         }
+        rastroPacman = ClonaPosicao(pacMan->posicaoAtual);
+        MovePacman(pacMan, mapa, comando);
+        imprimeFantasmas(mapa, fantasma);
 
         if (verificaFimDeJogo(mapa, pacMan, fantasma, comando, rastroPacman))
         {
+            for (i = 0; i < 4; i++)
+            {
+                DesalocaPosicao(fantasma[i]->posicaoAntiga);
+            }
+            DesalocaPosicao(rastroPacman);
             break;
         }
+        for (i = 0; i < 4; i++)
+        {
+            DesalocaPosicao(fantasma[i]->posicaoAntiga);
+        }
         devolveItem(fantasma, mapa);
+        DesalocaPosicao(rastroPacman);
     }
+    SalvaTrilhaPacman(pacMan);
+    desalocaFantasma(fantasma);
 }
 
 void inicializarJogo(const char *diretorio)
@@ -101,6 +115,8 @@ void inicializarJogo(const char *diretorio)
 
     fclose(arquivo);
     realizaJogo(mapa, pacMan);
+    DesalocaPosicao(posicaoPacMan);
+    DesalocaPacman(pacMan);
     DesalocaMapa(mapa);
 }
 
