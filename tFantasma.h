@@ -20,7 +20,7 @@ typedef struct tFantasma
 
 tFantasma **criaFantasmas(tMapa *mapa);
 
-void achaFantasma(tFantasma *fantasma[4], int tipo, int linha, int coluna);
+void achaFantasma(tFantasma **fantasma, int tipo, int linha, int coluna);
 
 void movimentaFantasma(tFantasma *fantasma, tMapa *mapa);
 

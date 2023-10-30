@@ -80,7 +80,6 @@ void achaFantasma(tFantasma **fantasma, int tipo, int linha, int coluna)
 
 void movimentaFantasma(tFantasma *fantasma, tMapa *mapa)
 {
-    int i = 0;
     movimentaDirecoes(fantasma);
     if (EncontrouParedeMapa(mapa, fantasma->posicaoAtual) == false)
     {
@@ -105,7 +104,7 @@ void devolveItem(tFantasma **fantasma, tMapa *mapa)
     {
         if (fantasma[i]->existeFantasma)
         {
-            if (fantasma[i]->passoFantasma = '>')
+            if (fantasma[i]->passoFantasma == '>')
             {
                 fantasma[i]->passoFantasma = ' ';
             }

@@ -74,7 +74,6 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
 {
     char comida[50];
     char parede[50];
-    char fantasma[50];
     char charPacMan = '>';
     char limpa = ' ';
 
@@ -85,7 +84,6 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
 
     if (comando == MOV_BAIXO)
     {
-        int anterior = pacman->posicaoAtual->linha;
         pacman->posicaoAtual->linha++;
         if (EncontrouParedeMapa(mapa, pacman->posicaoAtual))
         {
@@ -102,7 +100,6 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
     }
     else if (comando == MOV_CIMA)
     {
-        int anterior = pacman->posicaoAtual->linha;
         pacman->posicaoAtual->linha--;
         if (EncontrouParedeMapa(mapa, pacman->posicaoAtual))
         {
@@ -119,7 +116,6 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
     }
     else if (comando == MOV_DIREITA)
     {
-        int anterior = pacman->posicaoAtual->coluna;
         pacman->posicaoAtual->coluna++;
         if (EncontrouParedeMapa(mapa, pacman->posicaoAtual))
         {
@@ -136,7 +132,6 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
     }
     else if (comando == MOV_ESQUERDA)
     {
-        int anterior = pacman->posicaoAtual->coluna;
         pacman->posicaoAtual->coluna--;
         if (EncontrouParedeMapa(mapa, pacman->posicaoAtual))
         {

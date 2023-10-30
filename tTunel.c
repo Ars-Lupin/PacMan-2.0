@@ -6,7 +6,8 @@
 
 tTunel *CriaTunel(int linhaAcesso1, int colunaAcesso1, int linhaAcesso2, int colunaAcesso2)
 {
-    tTunel *tuneis = malloc(sizeof(tTunel));
+    tTunel *tuneis = calloc(1, sizeof(tTunel));
+
     tuneis->acesso1->linha = linhaAcesso1;
     tuneis->acesso1->coluna = colunaAcesso1;
     tuneis->acesso2->linha = linhaAcesso2;
@@ -43,5 +44,5 @@ void LevaFinalTunel(tTunel *tunel, tPosicao *posicao)
 
 void DesalocaTunel(tTunel *tunel)
 {
-        free(tunel);
+    free(tunel);
 }

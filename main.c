@@ -87,7 +87,6 @@ void realizaJogo(tMapa *mapa, tPacman *pacMan)
 void inicializarJogo(const char *diretorio)
 {
     char caminho_inicializacao[maxCaminho];
-    char caminho_mapa[maxCaminho];
     char charPacMan = '>';
     int i;
     tPosicao *posicaoPacMan;
