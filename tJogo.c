@@ -79,7 +79,10 @@ bool colisaoFantasma(tPacman *pacman, tFantasma **fantasma, tPosicao *rastroPosi
             {
                 AtualizaItemMapa(mapa, fantasma[i]->posicaoAtual, fantasma[i]->tipo);
                 MataPacman(pacman);
-                encontrouComidaNaMorte(fantasma[i]);
+                if (encontrouComidaNaMorte(fantasma[i]))
+                {
+                    atribuiComidaJogada(comando, pacman);
+                }
                 return true;
             }
         }
