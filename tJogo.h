@@ -4,7 +4,7 @@
 #include "tPosicao.h"
 #include "tMapa.h"
 #include "tFantasma.h"
-#include "tPacMan.h"
+#include "tPacman.h"
 
 bool verificaFimDeJogo(tMapa *mapa, tPacman *pacman, tFantasma **fantasmas, COMANDO comando, tPosicao *rastroPacman);
 
