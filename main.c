@@ -18,7 +18,7 @@
 
 // void geraRanking{}
 
-void realizaJogo(tMapa *mapa, tPacman *pacMan)
+void realizaJogo(const char *diretorio, tMapa *mapa, tPacman *pacman)
 {
     tFantasma **fantasma;
     tPosicao *rastroPacman;
@@ -28,12 +28,15 @@ void realizaJogo(tMapa *mapa, tPacman *pacMan)
     nLinhas = ObtemNumeroLinhasMapa(mapa);
     nColunas = ObtemNumeroColunasMapa(mapa);
     fantasma = criaFantasmas(mapa);
-    CriaTrilhaPacman(pacMan, nLinhas, nColunas);
+    CriaTrilhaPacman(pacman, nLinhas, nColunas);
     inicializaFantasmas(fantasma, mapa);
 
     while (1)
     {
-        AtualizaTrilhaPacman(pacMan);
+        int comidaPreJogada = ObtemPontuacaoAtualPacman(pacman);
+        int colisaoPreJogada = ObtemNumeroColisoesParedePacman(pacman);
+
+        AtualizaTrilhaPacman(pacman);
         scanf(" %c", &jogada);
         if (jogada == 'w')
         {
@@ -60,8 +63,8 @@ void realizaJogo(tMapa *mapa, tPacman *pacMan)
                 movimentaFantasma(fantasma[i], mapa);
             }
         }
-        rastroPacman = ClonaPosicao(pacMan->posicaoAtual);
-        MovePacman(pacMan, mapa, comando);
+        rastroPacman = ClonaPosicao(pacman->posicaoAtual);
+        MovePacman(pacman, mapa, comando);
         for (i = 0; i < 4; i++)
         {
             if (fantasma[i]->existeFantasma)
@@ -70,8 +73,18 @@ void realizaJogo(tMapa *mapa, tPacman *pacMan)
             }
         }
 
-        if (verificaFimDeJogo(mapa, pacMan, fantasma, comando, rastroPacman))
+        if(comeuFruta(comidaPreJogada, pacman))
         {
+            resumoComida(diretorio, jogada, pacman);
+        }
+        else if(bateuParede(colisaoPreJogada, pacman))
+        {
+            resumoParede(diretorio, jogada, pacman);
+        }
+
+        if (verificaFimDeJogo(mapa, pacman, fantasma, comando, rastroPacman))
+        {
+            resumoFantasma(diretorio, jogada, pacman);
             for (i = 0; i < 4; i++)
             {
                 if (fantasma[i]->existeFantasma)
@@ -92,7 +105,7 @@ void realizaJogo(tMapa *mapa, tPacman *pacMan)
         devolveItem(fantasma, mapa);
         DesalocaPosicao(rastroPacman);
     }
-    SalvaTrilhaPacman(pacMan);
+    SalvaTrilhaPacman(pacman);
     desalocaFantasma(fantasma);
 }
 
@@ -102,7 +115,7 @@ void inicializarJogo(const char *diretorio)
     char charPacMan = '>';
     int i;
     tPosicao *posicaoPacMan;
-    tPacman *pacMan;
+    tPacman *pacman;
     tMapa *mapa;
     mapa = CriaMapa(diretorio);
     sprintf(caminho_inicializacao, "%s/saida/inicializacao.txt", diretorio);
@@ -120,14 +133,15 @@ void inicializarJogo(const char *diretorio)
 
     posicaoPacMan = ObtemPosicaoItemMapa(mapa, charPacMan);
 
-    pacMan = CriaPacman(posicaoPacMan);
+    pacman = CriaPacman(posicaoPacMan);
 
     fprintf(arquivo, "Pac-Man comecara o jogo na linha %d e coluna %d\n", posicaoPacMan->linha + 1, posicaoPacMan->coluna + 1);
 
     fclose(arquivo);
-    realizaJogo(mapa, pacMan);
+    realizaJogo(diretorio, mapa, pacman);
+    GerarEstatisticas(diretorio, pacman);
     DesalocaPosicao(posicaoPacMan);
-    DesalocaPacman(pacMan);
+    DesalocaPacman(pacman);
     DesalocaMapa(mapa);
 }
 
@@ -140,7 +154,6 @@ int main(int argv, char *caminhoConfig[])
     }
     char diretorio[maxCaminho];
     strcpy(diretorio, caminhoConfig[1]);
-    // strcpy(diretorio, "template-TP-1-etapa-1-main/Casos/01");
     inicializarJogo(diretorio);
     return 0;
 }

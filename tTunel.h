@@ -48,6 +48,7 @@ void LevaFinalTunel(tTunel* tunel, tPosicao* posicao);
 /**
  * Caso o túnel seja diferente de NULL, libera o espaço alocado 
  * para a estrutura tTunel.
+ * Sempre verificar se é NULL antes de dar free.
  * \param tunel tunel
  */
 void DesalocaTunel(tTunel* tunel);

@@ -55,6 +55,7 @@ char* ObtemAcaoMovimento(tMovimento* movimento);
 
 /**
  * Libera o espaço alocado para a estrutura tMovimento
+ * Sempre verificar se é NULL antes de dar free.
  * 
  * \param movimento movimento
  */

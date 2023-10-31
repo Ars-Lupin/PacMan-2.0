@@ -52,8 +52,8 @@ typedef struct tPacman{
 tPacman* CriaPacman(tPosicao* posicao);
 
 /**
- * Clona o pacman dinamicamente, construtor de cópia.
- * Aloca outro pacman com as informaçoes do original (passado como parâmetro).
+ * Clona o pacman dinamicamente, apenas com relação a posição.
+ * Aloca outro pacman apenas copiando as informações de linha e coluna do original (passado como parâmetro).
  * \param pacman pacman
  */
 tPacman* ClonaPacman(tPacman* pacman);
@@ -143,7 +143,8 @@ void MataPacman(tPacman* pacman);
 
 /**
  * Caso o pacman seja diferente de NULL, libera o espaço 
- * alocado para a estrutura tPacman
+ * alocado para a estrutura tPacman.
+ * Sempre verificar se é NULL antes de dar free.
  * 
  * \param pacman pacman
  */

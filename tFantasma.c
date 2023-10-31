@@ -19,8 +19,9 @@ tFantasma **criaFantasmas(tMapa *mapa)
 {
     int tamanho = 4, i, j;
     tFantasma **fantasma = (tFantasma **)malloc(tamanho * sizeof(tFantasma *));
-    int tipo;
-
+    int tipo, linhasMapa, colunasMapa;
+    linhasMapa = ObtemNumeroLinhasMapa(mapa);
+    colunasMapa = ObtemNumeroColunasMapa(mapa);
     for (i = 0; i < 4; i++)
     {
         fantasma[i] = (tFantasma *)malloc(sizeof(tFantasma));
@@ -41,9 +42,9 @@ tFantasma **criaFantasmas(tMapa *mapa)
     fantasma[I]->tipo = 'I';
     fantasma[C]->tipo = 'C';
 
-    for (i = 0; i < mapa->nLinhas; i++)
+    for (i = 0; i < linhasMapa; i++)
     {
-        for (j = 0; j < mapa->nColunas; j++)
+        for (j = 0; j < colunasMapa; j++)
         {
             if (mapa->grid[i][j] == 'B')
             {

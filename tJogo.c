@@ -71,6 +71,7 @@ bool colisaoFantasma(tPacman *pacman, tFantasma **fantasma, tPosicao *rastroPosi
                 MataPacman(pacman);
                 if (encontrouComidaNaMorte(fantasma[i]))
                 {
+                    ResumoComida()
                     atribuiComidaJogada(comando, pacman);
                 }
                 return true;
@@ -169,4 +170,135 @@ void atribuiComidaJogada(COMANDO comando, tPacman *pacman)
     {
         pacman->nFrutasComidasDireita++;
     }
+}
+
+void GerarEstatisticas(const char *diretorio, tPacman *pacman)
+{
+    char caminho_estatisticas[MAX_PATH_SIZE];
+
+    sprintf(caminho_estatisticas, "%s/saida/estatisticas.txt", diretorio);
+    FILE *arquivo = fopen(caminho_estatisticas, "a");
+
+    fprintf(arquivo, "Numero de movimentos: %d\n", ObtemNumeroMovimento(pacman));
+    fprintf(arquivo, "Numero de movimentos sem pontuar: %d\n", ObtemNumeroMovimentosSemPontuarPacman(pacman));
+    fprintf(arquivo, "Numero de colisoes com parede: %d\n", ObtemNumeroColisoesParedePacman(pacman));
+    fprintf(arquivo, "Numero de movimentos para baixo: %d\n", ObtemNumeroMovimentosBaixoPacman(pacman));
+    fprintf(arquivo, "Numero de movimentos para cima: %d\n", ObtemNumeroMovimentosCimaPacman(pacman));
+    fprintf(arquivo, "Numero de movimentos para esquerda: %d\n", ObtemNumeroMovimentosEsquerdaPacman(pacman));
+    fprintf(arquivo, "Numero de movimentos para direita: %d\n", ObtemNumeroMovimentosDireitaPacman(pacman));
+
+    fclose(arquivo);
+}
+
+void GerarRanking(const char *diretorio, tPacman *pacman) // analisa os dados e forma o ranking
+{
+    char caminho_ranking[MAX_PATH_SIZE];
+    tRanking maior[4];
+    RankJogada[0].letra[0] = 'w'; // Define como strings as jogadas
+    RankJogada[1].letra[0] = 's';
+    RankJogada[2].letra[0] = 'a';
+    RankJogada[3].letra[0] = 'd';
+    //###########################-Jogada w -##############################//
+    RankJogada[0].comidas = ObtemNumeroFrutasComidasCimaPacman(pacman);
+    RankJogada[0].colisoes = ObtemNumeroColisoesParedeCimaPacman(pacman);
+    RankJogada[0].jogadas = ObtemNumeroMovimentosCimaPacman(pacman);
+    //###########################-Jogada s -##############################//
+    RankJogada[1].comidas = ObtemNumeroFrutasComidasBaixoPacman(pacman);
+    RankJogada[1].colisoes = ObtemNumeroColisoesParedeBaixoPacman(pacman);
+    RankJogada[1].jogadas = ObtemNumeroMovimentosBaixoPacman(pacman);
+    //###########################-Jogada a -##############################//
+    RankJogada[2].comidas = ObtemNumeroFrutasComidasEsquerdaPacman(pacman);
+    RankJogada[2].colisoes = ObtemNumeroColisoesParedeEsquerdaPacman(pacman);
+    RankJogada[2].jogadas = ObtemNumeroMovimentosEsquerdaPacman(pacman);
+    //###########################-Jogada d -##############################//
+    RankJogada[3].comidas = ObtemNumeroFrutasComidasDireitaPacman(pacman);
+    RankJogada[3].colisoes = ObtemNumeroColisoesParedeDireitaPacman(pacman);
+    RankJogada[3].jogadas = ObtemNumeroMovimentosDireitaPacman(pacman);
+
+    tRanking temp;
+    int i, j;
+
+
+
+    // Ordenar em ordem decrescente
+    for (i = 0; i < 3; i++)
+    {
+        for (j = i + 1; j < 4; j++)
+        {
+            if (maior[j].comidas > maior[i].comidas ||
+                (maior[j].comidas == maior[i].comidas &&
+                 maior[j].colisoes < maior[i].colisoes) ||
+                (maior[j].comidas == maior[i].comidas &&
+                 maior[j].colisoes == maior[i].colisoes &&
+                 maior[j].jogadas > maior[i].jogadas) ||
+                (maior[j].comidas == maior[i].comidas &&
+                 maior[j].colisoes == maior[i].colisoes &&
+                 maior[j].jogadas == maior[i].jogadas &&
+                 strcmp(maior[j].letra, maior[i].letra) < 0))
+            {
+                temp = maior[i];
+                maior[i] = maior[j];
+                maior[j] = temp;
+            }
+        }
+    }
+
+    sprintf(caminho_ranking, "%s/saida/ranking.txt", diretorio);
+    FILE *arquivo = fopen(caminho_ranking, "a");
+    for (i = 0; i < 4; i++)
+    {
+        fprintf(arquivo, "%s,%d,%d,%d\n", maior[i].letra, maior[i].comidas, maior[i].colisoes, maior[i].jogadas);
+    }
+
+    fclose(arquivo);
+}
+
+void resumoComida(const char *diretorio, char jogada, tPacman *pacman) // Escreve o resumo de quando pegou a comida
+{
+    int numjogadas = ObtemNumeroAtualMovimentosPacman(pacman);
+    char caminho_resumo[MAX_PATH_SIZE];
+    sprintf(caminho_resumo, "%s/saida/resumo.txt", diretorio);
+    FILE *arquivo = fopen(caminho_resumo, "a");
+    fprintf(arquivo, "Movimento %d (%c) pegou comida\n", numjogadas, jogada);
+    fclose(arquivo);
+}
+
+void resumoParede(const char *diretorio, char jogada, tPacman *pacman) // Escreve o resumo de quando bateu na parede
+{
+    int numjogadas = ObtemNumeroAtualMovimentosPacman(pacman);
+    char caminho_resumo[MAX_PATH_SIZE];
+    sprintf(caminho_resumo, "%s/saida/resumo.txt", diretorio);
+    FILE *arquivo = fopen(caminho_resumo, "a");
+    fprintf(arquivo, "Movimento %d (%c) colidiu na parede\n", numjogadas, jogada);
+    fclose(arquivo);
+}
+
+void resumoFantasma(const char *diretorio, char jogada, tPacman *pacman) // Escreve o resumo se bateu no fantasma
+{
+    int numjogadas = ObtemNumeroAtualMovimentosPacman(pacman);
+    char caminho_resumo[MAX_PATH_SIZE];
+    sprintf(caminho_resumo, "%s/saida/resumo.txt", diretorio);
+    FILE *arquivo = fopen(caminho_resumo, "a");
+    fprintf(arquivo, "Movimento %d (%c) fim de jogo por encostar em um fantasma\n", numjogadas, jogada);
+    fclose(arquivo);
+}
+
+bool comeuFruta(int frutasPreJogada, tPacman *pacman)
+{
+    int frutaPosJogada = ObtemPontuacaoAtualPacman(pacman);
+    if(frutasPreJogada != frutaPosJogada)
+    {
+        return true;
+    }
+return false;
+}
+
+bool bateuParede(int colisoesPreJogada, tPacman *pacman)
+{
+    int colisoesPosJogada = ObtemNumeroColisoesParedePacman(pacman);
+    if(colisoesPreJogada != colisoesPosJogada)
+    {
+        return true;
+    }
+return false;
 }

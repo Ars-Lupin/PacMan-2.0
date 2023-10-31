@@ -18,7 +18,10 @@ typedef struct tMapa{
     /* Número atual de frutas no mapa 
        que deverá ser preenchido com a informação no arquivo 
        de configurações do mapa, passado na função CriaMapa.
-       Deverá ser atualizada a medida que o jogo prossegue */
+       Esse valor não precisa ser atualizado, é o número inicial de 
+       frutas do mapa, ele vai ser comparado com o número atual de frutas
+       que o pacman comeu em tempo real para ver se o jogador venceu 
+       a partida. A função de get pra ela deve ser ObtemQuantidadeFrutasIniciaisMapa */
     int nFrutasAtual;
 
     /* Número máximo permitido de movimentos do pacman no mapa
@@ -151,7 +154,7 @@ void EntraTunelMapa(tMapa* mapa, tPosicao* posicao);
 
 /**
  * Libera o espaço alocado para a estrutura tMapa.
- * Apenas desaloca o mapa caso o mapa seja diferente de NULL.
+ * Sempre verificar se é NULL antes de dar free.
  * \param mapa mapa
  */
 void DesalocaMapa(tMapa* mapa);

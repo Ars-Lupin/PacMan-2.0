@@ -126,10 +126,6 @@ tPosicao *ObtemPosicaoItemMapa(tMapa *mapa, char item)
         {
             if (mapa->grid[i][j] == item)
             {
-                // tPosicao *posicaoItem;
-                // posicaoItem = CriaPosicao(i, j);
-                // posicaoItem->linha = i;
-                // posicaoItem->coluna = j;
                 return CriaPosicao(i, j);
             }
         }
