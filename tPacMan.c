@@ -201,25 +201,30 @@ void SalvaTrilhaPacman(tPacman *pacman)
     int i, j;
     for (i = 0; i < pacman->nLinhasTrilha; i++)
     {
-        for (j = 0; j < pacman->nColunasTrilha - 1; j++)
+        for (j = 0; j < pacman->nColunasTrilha; j++)
         {
             if (pacman->trilha[i][j] == -1)
             {
-                fprintf(fTrilha, "# ");
+                if (j != (pacman->nColunasTrilha - 1))
+                {
+                    fprintf(fTrilha, "# ");
+                }
+                else
+                {
+                    fprintf(fTrilha, "#");
+                }
             }
             else
             {
-                fprintf(fTrilha, "%d ", pacman->trilha[i][j]);
+                if (j != (pacman->nColunasTrilha - 1))
+                {
+                    fprintf(fTrilha, "%d ", pacman->trilha[i][j]);
+                }
+                else
+                {
+                    fprintf(fTrilha, "%d", pacman->trilha[i][j]);
+                }
             }
-        }
-        j = j + 1;
-        if (pacman->trilha[i][j] == -1)
-        {
-            fprintf(fTrilha, "#");
-        }
-        else
-        {
-            fprintf(fTrilha, "%d", pacman->trilha[i][j]);
         }
         fprintf(fTrilha, "\n");
     }
