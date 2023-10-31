@@ -8,6 +8,8 @@
 #include "tPacman.h"
 #include "tJogo.h"
 
+#define maxCaminho 1001
+
 bool verificaFimDeJogo(tMapa *mapa, tPacman *pacman, tFantasma **fantasmas, COMANDO comando, tPosicao *rastroPacman)
 {
     char jogada = atribuiJogada(comando);
@@ -71,7 +73,6 @@ bool colisaoFantasma(tPacman *pacman, tFantasma **fantasma, tPosicao *rastroPosi
                 MataPacman(pacman);
                 if (encontrouComidaNaMorte(fantasma[i]))
                 {
-                    ResumoComida()
                     atribuiComidaJogada(comando, pacman);
                 }
                 return true;
@@ -174,12 +175,12 @@ void atribuiComidaJogada(COMANDO comando, tPacman *pacman)
 
 void GerarEstatisticas(const char *diretorio, tPacman *pacman)
 {
-    char caminho_estatisticas[MAX_PATH_SIZE];
+    char caminho_estatisticas[maxCaminho];
 
     sprintf(caminho_estatisticas, "%s/saida/estatisticas.txt", diretorio);
     FILE *arquivo = fopen(caminho_estatisticas, "a");
 
-    fprintf(arquivo, "Numero de movimentos: %d\n", ObtemNumeroMovimento(pacman));
+    fprintf(arquivo, "Numero de movimentos: %d\n", ObtemNumeroAtualMovimentosPacman(pacman));
     fprintf(arquivo, "Numero de movimentos sem pontuar: %d\n", ObtemNumeroMovimentosSemPontuarPacman(pacman));
     fprintf(arquivo, "Numero de colisoes com parede: %d\n", ObtemNumeroColisoesParedePacman(pacman));
     fprintf(arquivo, "Numero de movimentos para baixo: %d\n", ObtemNumeroMovimentosBaixoPacman(pacman));
@@ -192,7 +193,7 @@ void GerarEstatisticas(const char *diretorio, tPacman *pacman)
 
 void GerarRanking(const char *diretorio, tPacman *pacman) // analisa os dados e forma o ranking
 {
-    char caminho_ranking[MAX_PATH_SIZE];
+    char caminho_ranking[maxCaminho];
     tRanking maior[4];
     RankJogada[0].letra[0] = 'w'; // Define como strings as jogadas
     RankJogada[1].letra[0] = 's';
@@ -256,7 +257,7 @@ void GerarRanking(const char *diretorio, tPacman *pacman) // analisa os dados e 
 void resumoComida(const char *diretorio, char jogada, tPacman *pacman) // Escreve o resumo de quando pegou a comida
 {
     int numjogadas = ObtemNumeroAtualMovimentosPacman(pacman);
-    char caminho_resumo[MAX_PATH_SIZE];
+    char caminho_resumo[maxCaminho];
     sprintf(caminho_resumo, "%s/saida/resumo.txt", diretorio);
     FILE *arquivo = fopen(caminho_resumo, "a");
     fprintf(arquivo, "Movimento %d (%c) pegou comida\n", numjogadas, jogada);
@@ -266,7 +267,7 @@ void resumoComida(const char *diretorio, char jogada, tPacman *pacman) // Escrev
 void resumoParede(const char *diretorio, char jogada, tPacman *pacman) // Escreve o resumo de quando bateu na parede
 {
     int numjogadas = ObtemNumeroAtualMovimentosPacman(pacman);
-    char caminho_resumo[MAX_PATH_SIZE];
+    char caminho_resumo[maxCaminho];
     sprintf(caminho_resumo, "%s/saida/resumo.txt", diretorio);
     FILE *arquivo = fopen(caminho_resumo, "a");
     fprintf(arquivo, "Movimento %d (%c) colidiu na parede\n", numjogadas, jogada);
@@ -276,7 +277,7 @@ void resumoParede(const char *diretorio, char jogada, tPacman *pacman) // Escrev
 void resumoFantasma(const char *diretorio, char jogada, tPacman *pacman) // Escreve o resumo se bateu no fantasma
 {
     int numjogadas = ObtemNumeroAtualMovimentosPacman(pacman);
-    char caminho_resumo[MAX_PATH_SIZE];
+    char caminho_resumo[maxCaminho];
     sprintf(caminho_resumo, "%s/saida/resumo.txt", diretorio);
     FILE *arquivo = fopen(caminho_resumo, "a");
     fprintf(arquivo, "Movimento %d (%c) fim de jogo por encostar em um fantasma\n", numjogadas, jogada);
