@@ -6,28 +6,28 @@
 
 tPacman *CriaPacman(tPosicao *posicao)
 {
-    tPacman *pacman = malloc(sizeof(tPacman)); // Aloca a estrutura do Pacman
+    tPacman *pacman = calloc(1, sizeof(tPacman)); // Aloca a estrutura do Pacman
     pacman->posicaoAtual = (tPosicao *)malloc(sizeof(tPosicao));
     pacman->historicoDeMovimentosSignificativos = (tMovimento **)malloc(sizeof(tMovimento *));
 
     pacman->posicaoAtual->linha = posicao->linha;
     pacman->posicaoAtual->coluna = posicao->coluna;
     pacman->estaVivo = true;
-    pacman->nMovimentosBaixo = 0;
-    pacman->nFrutasComidasBaixo = 0;
-    pacman->nColisoesParedeBaixo = 0;
-    pacman->nMovimentosCima = 0;
-    pacman->nFrutasComidasCima = 0;
-    pacman->nColisoesParedeCima = 0;
-    pacman->nMovimentosEsquerda = 0;
-    pacman->nFrutasComidasEsquerda = 0;
-    pacman->nColisoesParedeEsquerda = 0;
-    pacman->nMovimentosDireita = 0;
-    pacman->nFrutasComidasDireita = 0;
-    pacman->nColisoesParedeDireita = 0;
-    pacman->nMovimentosSignificativos = 0;
-    pacman->nLinhasTrilha = 0;
-    pacman->nColunasTrilha = 0;
+    // pacman->nMovimentosBaixo = 0;
+    // pacman->nFrutasComidasBaixo = 0;
+    // pacman->nColisoesParedeBaixo = 0;
+    // pacman->nMovimentosCima = 0;
+    // pacman->nFrutasComidasCima = 0;
+    // pacman->nColisoesParedeCima = 0;
+    // pacman->nMovimentosEsquerda = 0;
+    // pacman->nFrutasComidasEsquerda = 0;
+    // pacman->nColisoesParedeEsquerda = 0;
+    // pacman->nMovimentosDireita = 0;
+    // pacman->nFrutasComidasDireita = 0;
+    // pacman->nColisoesParedeDireita = 0;
+    // pacman->nMovimentosSignificativos = 0;
+    // pacman->nLinhasTrilha = 0;
+    // pacman->nColunasTrilha = 0;
     return pacman;
 }
 
@@ -58,7 +58,21 @@ tPacman *ClonaPacman(tPacman *pacman)
     return pacManClone;
 }
 
-tMovimento **ClonaHistoricoDeMovimentosSignificativosPacman(tPacman *pacman) {}
+tMovimento **ClonaHistoricoDeMovimentosSignificativosPacman(tPacman *pacman)
+{
+    int i;
+    if (pacman != NULL || pacman->historicoDeMovimentosSignificativos)
+    {
+        tMovimento **clone = (tMovimento **)malloc((pacman->nMovimentosSignificativos + 1) * sizeof(tMovimento *));
+        if (clone != NULL)
+        {
+        for (i = 0; i < pacman->nMovimentosSignificativos; i++){
+            clone[i] = NULL;
+        }
+        
+        }
+    }
+}
 
 tPosicao *ObtemPosicaoPacman(tPacman *pacman)
 {

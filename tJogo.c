@@ -17,8 +17,9 @@ bool verificaFimDeJogo(tMapa *mapa, tPacman *pacman, tFantasma **fantasmas, COMA
     int pontuacaoMaxima = ObtemQuantidadeFrutasIniciaisMapa(mapa);
     strcpy(colisao, "fim de jogo por encostar em um fantasma");
 
-    if (colisaoFantasma(pacman, fantasmas, rastroPacman, mapa))
+    if (colisaoFantasma(pacman, fantasmas, rastroPacman, mapa, comando))
     {
+        pontos = ObtemPontuacaoAtualPacman(pacman);
         imprimeSaida(mapa, jogada, pontos);
         InsereNovoMovimentoSignificativoPacman(pacman, comando, colisao);
         gameOver(pontos);
@@ -54,7 +55,7 @@ bool fimDosMovimentos(tMapa *mapa, tPacman *pacman)
     return false;
 }
 
-bool colisaoFantasma(tPacman *pacman, tFantasma **fantasma, tPosicao *rastroPosicao, tMapa *mapa)
+bool colisaoFantasma(tPacman *pacman, tFantasma **fantasma, tPosicao *rastroPosicao, tMapa *mapa, COMANDO comando)
 {
     int i;
     char vazio = ' ';
@@ -68,12 +69,17 @@ bool colisaoFantasma(tPacman *pacman, tFantasma **fantasma, tPosicao *rastroPosi
                 AtualizaItemMapa(mapa, pacman->posicaoAtual, vazio);
                 AtualizaItemMapa(mapa, fantasma[i]->posicaoAtual, fantasma[i]->tipo);
                 MataPacman(pacman);
+                if (encontrouComidaNaMorte(fantasma[i]))
+                {
+                    atribuiComidaJogada(comando, pacman);
+                }
                 return true;
             }
             else if (SaoIguaisPosicao(pacman->posicaoAtual, fantasma[i]->posicaoAtual))
             {
                 AtualizaItemMapa(mapa, fantasma[i]->posicaoAtual, fantasma[i]->tipo);
                 MataPacman(pacman);
+                encontrouComidaNaMorte(fantasma[i]);
                 return true;
             }
         }
@@ -131,4 +137,33 @@ char atribuiJogada(COMANDO comando)
         jogada = 'd';
     }
     return jogada;
+}
+
+bool encontrouComidaNaMorte(tFantasma *fantasma)
+{
+    if (fantasma->passoFantasma == '*')
+    {
+        return true;
+    }
+    return false;
+}
+
+void atribuiComidaJogada(COMANDO comando, tPacman *pacman)
+{
+    if (comando == MOV_CIMA)
+    {
+        pacman->nFrutasComidasCima++;
+    }
+    else if (comando == MOV_ESQUERDA)
+    {
+        pacman->nFrutasComidasEsquerda++;
+    }
+    else if (comando == MOV_BAIXO)
+    {
+        pacman->nFrutasComidasBaixo++;
+    }
+    else if (comando == MOV_DIREITA)
+    {
+        pacman->nFrutasComidasDireita++;
+    }
 }
