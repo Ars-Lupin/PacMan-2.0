@@ -11,7 +11,7 @@ tPacman *CriaPacman(tPosicao *posicao)
         return NULL;
     }
     tPacman *pacman = calloc(1, sizeof(tPacman)); // Aloca a estrutura do Pacman
-    pacman->posicaoAtual = (tPosicao *)malloc(sizeof(tPosicao))
+    pacman->posicaoAtual = (tPosicao *)malloc(sizeof(tPosicao));
     
     if(pacman->posicaoAtual == NULL)
     {

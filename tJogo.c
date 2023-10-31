@@ -195,26 +195,26 @@ void GerarRanking(const char *diretorio, tPacman *pacman) // analisa os dados e 
 {
     char caminho_ranking[maxCaminho];
     tRanking maior[4];
-    RankJogada[0].letra[0] = 'w'; // Define como strings as jogadas
-    RankJogada[1].letra[0] = 's';
-    RankJogada[2].letra[0] = 'a';
-    RankJogada[3].letra[0] = 'd';
+    maior[0].letra[0] = 'w'; // Define como strings as jogadas
+    maior[1].letra[0] = 's';
+    maior[2].letra[0] = 'a';
+    maior[3].letra[0] = 'd';
     //###########################-Jogada w -##############################//
-    RankJogada[0].comidas = ObtemNumeroFrutasComidasCimaPacman(pacman);
-    RankJogada[0].colisoes = ObtemNumeroColisoesParedeCimaPacman(pacman);
-    RankJogada[0].jogadas = ObtemNumeroMovimentosCimaPacman(pacman);
+    maior[0].comidas = ObtemNumeroFrutasComidasCimaPacman(pacman);
+    maior[0].colisoes = ObtemNumeroColisoesParedeCimaPacman(pacman);
+    maior[0].jogadas = ObtemNumeroMovimentosCimaPacman(pacman);
     //###########################-Jogada s -##############################//
-    RankJogada[1].comidas = ObtemNumeroFrutasComidasBaixoPacman(pacman);
-    RankJogada[1].colisoes = ObtemNumeroColisoesParedeBaixoPacman(pacman);
-    RankJogada[1].jogadas = ObtemNumeroMovimentosBaixoPacman(pacman);
+    maior[1].comidas = ObtemNumeroFrutasComidasBaixoPacman(pacman);
+    maior[1].colisoes = ObtemNumeroColisoesParedeBaixoPacman(pacman);
+    maior[1].jogadas = ObtemNumeroMovimentosBaixoPacman(pacman);
     //###########################-Jogada a -##############################//
-    RankJogada[2].comidas = ObtemNumeroFrutasComidasEsquerdaPacman(pacman);
-    RankJogada[2].colisoes = ObtemNumeroColisoesParedeEsquerdaPacman(pacman);
-    RankJogada[2].jogadas = ObtemNumeroMovimentosEsquerdaPacman(pacman);
+    maior[2].comidas = ObtemNumeroFrutasComidasEsquerdaPacman(pacman);
+    maior[2].colisoes = ObtemNumeroColisoesParedeEsquerdaPacman(pacman);
+    maior[2].jogadas = ObtemNumeroMovimentosEsquerdaPacman(pacman);
     //###########################-Jogada d -##############################//
-    RankJogada[3].comidas = ObtemNumeroFrutasComidasDireitaPacman(pacman);
-    RankJogada[3].colisoes = ObtemNumeroColisoesParedeDireitaPacman(pacman);
-    RankJogada[3].jogadas = ObtemNumeroMovimentosDireitaPacman(pacman);
+    maior[3].comidas = ObtemNumeroFrutasComidasDireitaPacman(pacman);
+    maior[3].colisoes = ObtemNumeroColisoesParedeDireitaPacman(pacman);
+    maior[3].jogadas = ObtemNumeroMovimentosDireitaPacman(pacman);
 
     tRanking temp;
     int i, j;
