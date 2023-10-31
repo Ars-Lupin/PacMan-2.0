@@ -138,11 +138,11 @@ void movimentaDirecoes(tFantasma *fantasma)
     }
     else if (fantasma->direcao == CIM)
     {
-        fantasma->posicaoAtual->linha++;
+        fantasma->posicaoAtual->linha--;
     }
     else if (fantasma->direcao == BAI)
     {
-        fantasma->posicaoAtual->linha--;
+        fantasma->posicaoAtual->linha++;
     }
 }
 

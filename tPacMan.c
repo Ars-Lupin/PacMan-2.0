@@ -76,6 +76,7 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
     char parede[50];
     char charPacMan = '>';
     char limpa = ' ';
+    char tunel = '@';
 
     strcpy(comida, "pegou comida");
     strcpy(parede, "colidiu com a parede");
@@ -146,6 +147,26 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
         }
         pacman->nMovimentosEsquerda++;
     }
+    if (PossuiTunelMapa(mapa))
+    {
+        if (EntrouTunel(mapa->tunel, pacman->posicaoAtual))
+        {
+            LevaFinalTunel(mapa->tunel, pacman->posicaoAtual);
+        }
+        if (SaoIguaisPosicao(pacman->posicaoAtual, mapa->tunel->acesso1))
+        {
+            AtualizaItemMapa(mapa, mapa->tunel->acesso2, tunel);
+        }
+        else if (SaoIguaisPosicao(pacman->posicaoAtual, mapa->tunel->acesso2))
+        {
+            AtualizaItemMapa(mapa, mapa->tunel->acesso1, tunel);
+        }
+        else
+        {
+            AtualizaItemMapa(mapa, mapa->tunel->acesso2, tunel);
+            AtualizaItemMapa(mapa, mapa->tunel->acesso1, tunel);
+        }
+    }
     AtualizaItemMapa(mapa, pacman->posicaoAtual, charPacMan);
 }
 
@@ -166,7 +187,6 @@ void CriaTrilhaPacman(tPacman *pacman, int nLinhas, int nColunas)
         {
             pacman->trilha[i][j] = -1;
         }
-        printf("\n");
     }
 }
 
@@ -181,16 +201,25 @@ void SalvaTrilhaPacman(tPacman *pacman)
     int i, j;
     for (i = 0; i < pacman->nLinhasTrilha; i++)
     {
-        for (j = 0; j < pacman->nColunasTrilha; j++)
+        for (j = 0; j < pacman->nColunasTrilha - 1; j++)
         {
             if (pacman->trilha[i][j] == -1)
             {
-                fprintf(fTrilha,"# ");
+                fprintf(fTrilha, "# ");
             }
             else
             {
                 fprintf(fTrilha, "%d ", pacman->trilha[i][j]);
             }
+        }
+        j = j + 1;
+        if (pacman->trilha[i][j] == -1)
+        {
+            fprintf(fTrilha, "#");
+        }
+        else
+        {
+            fprintf(fTrilha, "%d", pacman->trilha[i][j]);
         }
         fprintf(fTrilha, "\n");
     }

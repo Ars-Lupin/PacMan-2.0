@@ -62,20 +62,32 @@ void realizaJogo(tMapa *mapa, tPacman *pacMan)
         }
         rastroPacman = ClonaPosicao(pacMan->posicaoAtual);
         MovePacman(pacMan, mapa, comando);
-        imprimeFantasmas(mapa, fantasma);
+        for (i = 0; i < 4; i++)
+        {
+            if (fantasma[i]->existeFantasma)
+            {
+                imprimeFantasmas(mapa, fantasma);
+            }
+        }
 
         if (verificaFimDeJogo(mapa, pacMan, fantasma, comando, rastroPacman))
         {
             for (i = 0; i < 4; i++)
             {
-                DesalocaPosicao(fantasma[i]->posicaoAntiga);
+                if (fantasma[i]->existeFantasma)
+                {
+                    DesalocaPosicao(fantasma[i]->posicaoAntiga);
+                }
             }
             DesalocaPosicao(rastroPacman);
             break;
         }
         for (i = 0; i < 4; i++)
         {
-            DesalocaPosicao(fantasma[i]->posicaoAntiga);
+            if (fantasma[i]->existeFantasma)
+            {
+                DesalocaPosicao(fantasma[i]->posicaoAntiga);
+            }
         }
         devolveItem(fantasma, mapa);
         DesalocaPosicao(rastroPacman);
@@ -121,14 +133,14 @@ void inicializarJogo(const char *diretorio)
 
 int main(int argv, char *caminhoConfig[])
 {
-    // if (argv < 2) // caso o diretorio nao seja informado
-    // {
-    //     printf("ERRO: O diretorio de arquivos de configuracao nao foi informado\n");
-    //     return 1;
-    // }
+    if (argv < 2) // caso o diretorio nao seja informado
+    {
+        printf("ERRO: O diretorio de arquivos de configuracao nao foi informado\n");
+        return 1;
+    }
     char diretorio[maxCaminho];
-    // strcpy(diretorio, caminhoConfig[1]);
-    strcpy(diretorio, "template-TP-1-etapa-1-main/Casos/01");
+    strcpy(diretorio, caminhoConfig[1]);
+    // strcpy(diretorio, "template-TP-1-etapa-1-main/Casos/01");
     inicializarJogo(diretorio);
     return 0;
 }

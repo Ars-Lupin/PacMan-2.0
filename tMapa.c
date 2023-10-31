@@ -12,7 +12,7 @@ tMapa *CriaMapa(const char *caminhoConfig)
 {
     char caminhoMapa[maxCaminho];
     char caracter;
-    bool acabou;
+    bool acabou = false;
     int tunel1Coluna = -1, tunel1Linha = -1, tunel2Coluna = -1, tunel2Linha = -1, i, j;
     tMapa *mapa = (tMapa *)malloc(sizeof(tMapa)); // Aloca a estrutura do mapa
 
@@ -28,6 +28,7 @@ tMapa *CriaMapa(const char *caminhoConfig)
     mapa->nLinhas = 0;
     mapa->nColunas = 0;
     int colunaAtual = 0;
+    mapa->nFrutasAtual = 0;
 
     fscanf(arquivo, "%d\n", &mapa->nMaximoMovimentos);
 
@@ -75,18 +76,18 @@ tMapa *CriaMapa(const char *caminhoConfig)
     fclose(arquivo);
 
     // Acha se tiver tem tuneis e quais suas posições
-    int cont;
+    int cont = 0;
     for (i = 0; i < mapa->nLinhas; i++)
     {
         for (j = 0; j < mapa->nColunas; j++)
         {
-            if ((mapa->grid[i][j] == '@') && (cont = 0))
+            if ((mapa->grid[i][j] == '@') && (cont == 0))
             {
                 tunel1Linha = i;
                 tunel1Coluna = j;
                 cont++;
             }
-            else if ((mapa->grid[i][j] == '@') && (cont = 1))
+            else if ((mapa->grid[i][j] == '@') && (cont == 1))
             {
                 tunel2Linha = i;
                 tunel2Coluna = j;
@@ -224,7 +225,7 @@ void DesalocaMapa(tMapa *mapa)
 {
     if (mapa != NULL)
     {
-        int i; 
+        int i;
 
         if (mapa->grid != NULL)
         {

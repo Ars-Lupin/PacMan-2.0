@@ -46,5 +46,8 @@ bool SaoIguaisPosicao(tPosicao *posicao1, tPosicao *posicao2)
 
 void DesalocaPosicao(tPosicao *posicao)
 {
-    free(posicao);
+    if (posicao != NULL)
+    {
+        free(posicao);
+    }
 }

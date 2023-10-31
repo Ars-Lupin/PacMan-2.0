@@ -60,19 +60,22 @@ bool colisaoFantasma(tPacman *pacman, tFantasma **fantasma, tPosicao *rastroPosi
     char vazio = ' ';
     for (i = 0; i < 4; i++)
     {
+        if (fantasma[i]->existeFantasma)
+        {
 
-        if ((SaoIguaisPosicao(pacman->posicaoAtual, fantasma[i]->posicaoAntiga)) && (SaoIguaisPosicao(rastroPosicao, fantasma[i]->posicaoAtual)))
-        {
-            AtualizaItemMapa(mapa, pacman->posicaoAtual, vazio);
-            AtualizaItemMapa(mapa, fantasma[i]->posicaoAtual, fantasma[i]->tipo);
-            MataPacman(pacman);
-            return true;
-        }
-        else if (SaoIguaisPosicao(pacman->posicaoAtual, fantasma[i]->posicaoAtual))
-        {
-            AtualizaItemMapa(mapa, fantasma[i]->posicaoAtual, fantasma[i]->tipo);
-            MataPacman(pacman);
-            return true;
+            if ((SaoIguaisPosicao(pacman->posicaoAtual, fantasma[i]->posicaoAntiga)) && (SaoIguaisPosicao(rastroPosicao, fantasma[i]->posicaoAtual)))
+            {
+                AtualizaItemMapa(mapa, pacman->posicaoAtual, vazio);
+                AtualizaItemMapa(mapa, fantasma[i]->posicaoAtual, fantasma[i]->tipo);
+                MataPacman(pacman);
+                return true;
+            }
+            else if (SaoIguaisPosicao(pacman->posicaoAtual, fantasma[i]->posicaoAtual))
+            {
+                AtualizaItemMapa(mapa, fantasma[i]->posicaoAtual, fantasma[i]->tipo);
+                MataPacman(pacman);
+                return true;
+            }
         }
     }
     return false;
