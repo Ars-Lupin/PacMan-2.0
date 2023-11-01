@@ -199,27 +199,25 @@ void GerarRanking(const char *diretorio, tPacman *pacman) // analisa os dados e 
     maior[1].letra[0] = 's';
     maior[2].letra[0] = 'a';
     maior[3].letra[0] = 'd';
-    //###########################-Jogada w -##############################//
+    // ###########################-Jogada w -##############################//
     maior[0].comidas = ObtemNumeroFrutasComidasCimaPacman(pacman);
     maior[0].colisoes = ObtemNumeroColisoesParedeCimaPacman(pacman);
     maior[0].jogadas = ObtemNumeroMovimentosCimaPacman(pacman);
-    //###########################-Jogada s -##############################//
+    // ###########################-Jogada s -##############################//
     maior[1].comidas = ObtemNumeroFrutasComidasBaixoPacman(pacman);
     maior[1].colisoes = ObtemNumeroColisoesParedeBaixoPacman(pacman);
     maior[1].jogadas = ObtemNumeroMovimentosBaixoPacman(pacman);
-    //###########################-Jogada a -##############################//
+    // ###########################-Jogada a -##############################//
     maior[2].comidas = ObtemNumeroFrutasComidasEsquerdaPacman(pacman);
     maior[2].colisoes = ObtemNumeroColisoesParedeEsquerdaPacman(pacman);
     maior[2].jogadas = ObtemNumeroMovimentosEsquerdaPacman(pacman);
-    //###########################-Jogada d -##############################//
+    // ###########################-Jogada d -##############################//
     maior[3].comidas = ObtemNumeroFrutasComidasDireitaPacman(pacman);
     maior[3].colisoes = ObtemNumeroColisoesParedeDireitaPacman(pacman);
     maior[3].jogadas = ObtemNumeroMovimentosDireitaPacman(pacman);
 
     tRanking temp;
     int i, j;
-
-
 
     // Ordenar em ordem decrescente
     for (i = 0; i < 3; i++)
@@ -287,19 +285,19 @@ void resumoFantasma(const char *diretorio, char jogada, tPacman *pacman) // Escr
 bool comeuFruta(int frutasPreJogada, tPacman *pacman)
 {
     int frutaPosJogada = ObtemPontuacaoAtualPacman(pacman);
-    if(frutasPreJogada != frutaPosJogada)
+    if (frutasPreJogada != frutaPosJogada)
     {
         return true;
     }
-return false;
+    return false;
 }
 
 bool bateuParede(int colisoesPreJogada, tPacman *pacman)
 {
     int colisoesPosJogada = ObtemNumeroColisoesParedePacman(pacman);
-    if(colisoesPreJogada != colisoesPosJogada)
+    if (colisoesPreJogada != colisoesPosJogada)
     {
         return true;
     }
-return false;
+    return false;
 }

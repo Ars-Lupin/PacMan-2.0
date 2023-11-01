@@ -73,11 +73,11 @@ void realizaJogo(const char *diretorio, tMapa *mapa, tPacman *pacman)
             }
         }
 
-        if(comeuFruta(comidaPreJogada, pacman))
+        if (comeuFruta(comidaPreJogada, pacman))
         {
             resumoComida(diretorio, jogada, pacman);
         }
-        else if(bateuParede(colisaoPreJogada, pacman))
+        else if (bateuParede(colisaoPreJogada, pacman))
         {
             resumoParede(diretorio, jogada, pacman);
         }
