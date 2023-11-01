@@ -36,7 +36,7 @@ void realizaJogo(const char *diretorio, tMapa *mapa, tPacman *pacman)
         int comidaPreJogada = ObtemPontuacaoAtualPacman(pacman);
         int colisaoPreJogada = ObtemNumeroColisoesParedePacman(pacman);
 
-        AtualizaTrilhaPacman(pacman);
+        
         scanf(" %c", &jogada);
         if (jogada == 'w')
         {

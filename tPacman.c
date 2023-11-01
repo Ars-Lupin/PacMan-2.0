@@ -19,6 +19,7 @@ tPacman *CriaPacman(tPosicao *posicao)
     }
     pacman->historicoDeMovimentosSignificativos = (tMovimento **)malloc(sizeof(tMovimento *));
     AtualizaPosicao(pacman->posicaoAtual, posicao);
+    DesalocaPosicao(posicao);
     pacman->estaVivo = true;
     return pacman;
 }
@@ -71,6 +72,7 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
     char charPacMan = '>';
     char limpa = ' ';
     char tunel = '@';
+    int bateu = 0;
 
     strcpy(comida, "pegou comida");
     strcpy(parede, "colidiu com a parede");
@@ -85,6 +87,7 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
         {
             pacman->posicaoAtual->linha--;
             pacman->nColisoesParedeBaixo++;
+            bateu++;
             InsereNovoMovimentoSignificativoPacman(pacman, comando, parede);
         }
         else if (EncontrouComidaMapa(mapa, pacman->posicaoAtual))
@@ -101,6 +104,7 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
         {
             pacman->posicaoAtual->linha++;
             pacman->nColisoesParedeCima++;
+            bateu++;
             InsereNovoMovimentoSignificativoPacman(pacman, comando, parede);
         }
         else if (EncontrouComidaMapa(mapa, pacman->posicaoAtual))
@@ -117,6 +121,7 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
         {
             pacman->posicaoAtual->coluna--;
             pacman->nColisoesParedeDireita++;
+            bateu++;
             InsereNovoMovimentoSignificativoPacman(pacman, comando, parede);
         }
         else if (EncontrouComidaMapa(mapa, pacman->posicaoAtual))
@@ -133,6 +138,7 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
         {
             pacman->posicaoAtual->coluna++;
             pacman->nColisoesParedeEsquerda++;
+            bateu++;
             InsereNovoMovimentoSignificativoPacman(pacman, comando, parede);
         }
         else if (EncontrouComidaMapa(mapa, pacman->posicaoAtual))
@@ -141,10 +147,11 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
             InsereNovoMovimentoSignificativoPacman(pacman, comando, comida);
         }
     }
-    if (PossuiTunelMapa(mapa))
+    if ((PossuiTunelMapa(mapa)) && (bateu == 0))
     {
         if (EntrouTunel(mapa->tunel, pacman->posicaoAtual))
         {
+            AtualizaTrilhaPacman(pacman);
             LevaFinalTunel(mapa->tunel, pacman->posicaoAtual);
         }
         if (SaoIguaisPosicao(pacman->posicaoAtual, mapa->tunel->acesso1))
@@ -162,6 +169,7 @@ void MovePacman(tPacman *pacman, tMapa *mapa, COMANDO comando)
         }
     }
     AtualizaItemMapa(mapa, pacman->posicaoAtual, charPacMan);
+    AtualizaTrilhaPacman(pacman);
 }
 
 void CriaTrilhaPacman(tPacman *pacman, int nLinhas, int nColunas)
@@ -252,14 +260,6 @@ void DesalocaPacman(tPacman *pacman)
         }
         if (pacman->historicoDeMovimentosSignificativos != NULL)
         {
-
-            for (i = 0; i < pacman->nMovimentosSignificativos; i++)
-            {
-                if (pacman->historicoDeMovimentosSignificativos[i] != NULL)
-                {
-                    DesalocaMovimento(pacman->historicoDeMovimentosSignificativos[i]);
-                }
-            }
             free(pacman->historicoDeMovimentosSignificativos);
         }
         if (pacman->trilha != NULL)
