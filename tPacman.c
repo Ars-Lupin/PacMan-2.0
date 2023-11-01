@@ -19,7 +19,10 @@ tPacman *CriaPacman(tPosicao *posicao)
     }
     pacman->historicoDeMovimentosSignificativos = (tMovimento **)malloc(sizeof(tMovimento *));
     AtualizaPosicao(pacman->posicaoAtual, posicao);
-    DesalocaPosicao(posicao);
+    if (posicao != NULL)
+    {
+        DesalocaPosicao(posicao);
+    }
     pacman->estaVivo = true;
     return pacman;
 }

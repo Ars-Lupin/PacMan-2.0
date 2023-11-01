@@ -24,19 +24,18 @@ void realizaJogo(const char *diretorio, tMapa *mapa, tPacman *pacman)
     tPosicao *rastroPacman;
     int nLinhas, nColunas, i;
     char jogada;
+    char charPacMan = '>';
+    char limpa = ' ';
     COMANDO comando;
     nLinhas = ObtemNumeroLinhasMapa(mapa);
     nColunas = ObtemNumeroColunasMapa(mapa);
     fantasma = criaFantasmas(mapa);
     CriaTrilhaPacman(pacman, nLinhas, nColunas);
+    AtualizaTrilhaPacman(pacman);
     inicializaFantasmas(fantasma, mapa);
 
     while (1)
     {
-        int comidaPreJogada = ObtemPontuacaoAtualPacman(pacman);
-        int colisaoPreJogada = ObtemNumeroColisoesParedePacman(pacman);
-
-        
         scanf(" %c", &jogada);
         if (jogada == 'w')
         {
@@ -65,6 +64,9 @@ void realizaJogo(const char *diretorio, tMapa *mapa, tPacman *pacman)
         }
         rastroPacman = ClonaPosicao(pacman->posicaoAtual);
         MovePacman(pacman, mapa, comando);
+        AtualizaItemMapa(mapa, rastroPacman, limpa);
+        AtualizaItemMapa(mapa, pacman->posicaoAtual, charPacMan);
+        devolveTunel(mapa, pacman);
         for (i = 0; i < 4; i++)
         {
             if (fantasma[i]->existeFantasma)
@@ -73,18 +75,8 @@ void realizaJogo(const char *diretorio, tMapa *mapa, tPacman *pacman)
             }
         }
 
-        if (comeuFruta(comidaPreJogada, pacman))
-        {
-            resumoComida(diretorio, jogada, pacman);
-        }
-        else if (bateuParede(colisaoPreJogada, pacman))
-        {
-            resumoParede(diretorio, jogada, pacman);
-        }
-
         if (verificaFimDeJogo(mapa, pacman, fantasma, comando, rastroPacman))
         {
-            resumoFantasma(diretorio, jogada, pacman);
             for (i = 0; i < 4; i++)
             {
                 if (fantasma[i]->existeFantasma)
@@ -113,7 +105,7 @@ void inicializarJogo(const char *diretorio)
 {
     char caminho_inicializacao[maxCaminho];
     char charPacMan = '>';
-    int i;
+    int i, j;
     tPosicao *posicaoPacMan;
     tPacman *pacman;
     tMapa *mapa;
@@ -128,19 +120,25 @@ void inicializarJogo(const char *diretorio)
 
     for (i = 0; i < mapa->nLinhas; i++)
     {
-        fprintf(arquivo, "%s\n", mapa->grid[i]);
+        for (j = 0; j < mapa->nColunas; j++)
+        {
+            fprintf(arquivo, "%c", mapa->grid[i][j]);
+        }
+        fprintf(arquivo, "\n");
     }
 
     posicaoPacMan = ObtemPosicaoItemMapa(mapa, charPacMan);
 
     pacman = CriaPacman(posicaoPacMan);
 
-    fprintf(arquivo, "Pac-Man comecara o jogo na linha %d e coluna %d\n", posicaoPacMan->linha + 1, posicaoPacMan->coluna + 1);
+    fprintf(arquivo, "Pac-Man comecara o jogo na linha %d e coluna %d\n", pacman->posicaoAtual->linha + 1, pacman->posicaoAtual->coluna + 1);
 
     fclose(arquivo);
     realizaJogo(diretorio, mapa, pacman);
     GerarEstatisticas(diretorio, pacman);
-    DesalocaPosicao(posicaoPacMan);
+    GerarRanking(diretorio, pacman);
+    criaResumo(diretorio, pacman);
+    // desalocaHistoricoResumo(pacman);
     DesalocaPacman(pacman);
     DesalocaMapa(mapa);
 }

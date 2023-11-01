@@ -71,7 +71,7 @@ bool colisaoFantasma(tPacman *pacman, tFantasma **fantasma, tPosicao *rastroPosi
                 AtualizaItemMapa(mapa, pacman->posicaoAtual, vazio);
                 AtualizaItemMapa(mapa, fantasma[i]->posicaoAtual, fantasma[i]->tipo);
                 MataPacman(pacman);
-                if (encontrouComidaNaMorte(fantasma[i]))
+                if (encontrouComidaNaMorte(fantasma[i], pacman, comando))
                 {
                     atribuiComidaJogada(comando, pacman);
                 }
@@ -81,7 +81,7 @@ bool colisaoFantasma(tPacman *pacman, tFantasma **fantasma, tPosicao *rastroPosi
             {
                 AtualizaItemMapa(mapa, fantasma[i]->posicaoAtual, fantasma[i]->tipo);
                 MataPacman(pacman);
-                if (encontrouComidaNaMorte(fantasma[i]))
+                if (encontrouComidaNaMorte(fantasma[i], pacman, comando))
                 {
                     atribuiComidaJogada(comando, pacman);
                 }
@@ -103,11 +103,15 @@ bool venceu(int pontosAtuais, int pontosMaximos)
 
 void imprimeSaida(tMapa *mapa, char jogada, int pontos)
 {
-    int i;
+    int i, j;
     printf("Estado do jogo apos o movimento '%c':\n", jogada);
     for (i = 0; i < mapa->nLinhas; i++)
     {
-        printf("%s\n", mapa->grid[i]);
+        for (j = 0; j < mapa->nColunas; j++)
+        {
+            printf("%c", mapa->grid[i][j]);
+        }
+        printf("\n");
     }
     printf("Pontuacao: %d\n\n", pontos);
 }
@@ -144,10 +148,13 @@ char atribuiJogada(COMANDO comando)
     return jogada;
 }
 
-bool encontrouComidaNaMorte(tFantasma *fantasma)
+bool encontrouComidaNaMorte(tFantasma *fantasma, tPacman *pacman, COMANDO comando)
 {
     if (fantasma->passoFantasma == '*')
     {
+        char comida[50];
+        strcpy(comida, "pegou comida");
+        InsereNovoMovimentoSignificativoPacman(pacman, comando, comida);
         return true;
     }
     return false;
@@ -246,58 +253,64 @@ void GerarRanking(const char *diretorio, tPacman *pacman) // analisa os dados e 
     FILE *arquivo = fopen(caminho_ranking, "a");
     for (i = 0; i < 4; i++)
     {
-        fprintf(arquivo, "%s,%d,%d,%d\n", maior[i].letra, maior[i].comidas, maior[i].colisoes, maior[i].jogadas);
+        fprintf(arquivo, "%c,%d,%d,%d\n", maior[i].letra[0], maior[i].comidas, maior[i].colisoes, maior[i].jogadas);
     }
 
     fclose(arquivo);
 }
 
-void resumoComida(const char *diretorio, char jogada, tPacman *pacman) // Escreve o resumo de quando pegou a comida
+// void desalocaHistoricoResumo(tPacman *pacman)
+// {
+//     int i;
+//     if (pacman->historicoDeMovimentosSignificativos != NULL)
+//     {
+
+//         for (i = 0; i < pacman->nMovimentosSignificativos; i++)
+//         {
+//             DesalocaMovimento(pacman->historicoDeMovimentosSignificativos[i]);
+//         }
+//     }
+// }
+
+void criaResumo(const char *diretorio, tPacman *pacman)
 {
-    int numjogadas = ObtemNumeroAtualMovimentosPacman(pacman);
     char caminho_resumo[maxCaminho];
+    int i;
+    int nMovimentos = ObtemNumeroMovimentosSignificativosPacman(pacman);
     sprintf(caminho_resumo, "%s/saida/resumo.txt", diretorio);
     FILE *arquivo = fopen(caminho_resumo, "a");
-    fprintf(arquivo, "Movimento %d (%c) pegou comida\n", numjogadas, jogada);
-    fclose(arquivo);
-}
 
-void resumoParede(const char *diretorio, char jogada, tPacman *pacman) // Escreve o resumo de quando bateu na parede
-{
-    int numjogadas = ObtemNumeroAtualMovimentosPacman(pacman);
-    char caminho_resumo[maxCaminho];
-    sprintf(caminho_resumo, "%s/saida/resumo.txt", diretorio);
-    FILE *arquivo = fopen(caminho_resumo, "a");
-    fprintf(arquivo, "Movimento %d (%c) colidiu na parede\n", numjogadas, jogada);
-    fclose(arquivo);
-}
-
-void resumoFantasma(const char *diretorio, char jogada, tPacman *pacman) // Escreve o resumo se bateu no fantasma
-{
-    int numjogadas = ObtemNumeroAtualMovimentosPacman(pacman);
-    char caminho_resumo[maxCaminho];
-    sprintf(caminho_resumo, "%s/saida/resumo.txt", diretorio);
-    FILE *arquivo = fopen(caminho_resumo, "a");
-    fprintf(arquivo, "Movimento %d (%c) fim de jogo por encostar em um fantasma\n", numjogadas, jogada);
-    fclose(arquivo);
-}
-
-bool comeuFruta(int frutasPreJogada, tPacman *pacman)
-{
-    int frutaPosJogada = ObtemPontuacaoAtualPacman(pacman);
-    if (frutasPreJogada != frutaPosJogada)
+    for (i = 0; i < nMovimentos; i++)
     {
-        return true;
+        int numjogadas = ObtemNumeroMovimento(pacman->historicoDeMovimentosSignificativos[i]);
+        COMANDO comando = ObtemComandoMovimento(pacman->historicoDeMovimentosSignificativos[i]);
+        char jogada = atribuiJogada(comando);
+        char acao[50];
+        strcpy(acao, ObtemAcaoMovimento(pacman->historicoDeMovimentosSignificativos[i]));
+
+        fprintf(arquivo, "Movimento %d (%c) %s\n", numjogadas, jogada, acao);
     }
-    return false;
+    fclose(arquivo);
+    // desalocaHistoricoResumo(pacman);
 }
 
-bool bateuParede(int colisoesPreJogada, tPacman *pacman)
+void devolveTunel(tMapa *mapa, tPacman *pacman)
 {
-    int colisoesPosJogada = ObtemNumeroColisoesParedePacman(pacman);
-    if (colisoesPreJogada != colisoesPosJogada)
+    char tunel = '@';
+    if ((PossuiTunelMapa(mapa)))
     {
-        return true;
+        if (SaoIguaisPosicao(pacman->posicaoAtual, mapa->tunel->acesso1))
+        {
+            AtualizaItemMapa(mapa, mapa->tunel->acesso2, tunel);
+        }
+        else if (SaoIguaisPosicao(pacman->posicaoAtual, mapa->tunel->acesso2))
+        {
+            AtualizaItemMapa(mapa, mapa->tunel->acesso1, tunel);
+        }
+        else
+        {
+            AtualizaItemMapa(mapa, mapa->tunel->acesso2, tunel);
+            AtualizaItemMapa(mapa, mapa->tunel->acesso1, tunel);
+        }
     }
-    return false;
 }

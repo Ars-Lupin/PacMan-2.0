@@ -32,7 +32,7 @@ bool venceu(int pontosAtuais, int pontosMaximos);
 
 void atribuiComidaJogada(COMANDO comando, tPacman *pacman);
 
-bool encontrouComidaNaMorte(tFantasma *fantasma);
+bool encontrouComidaNaMorte(tFantasma *fantasma, tPacman *pacman, COMANDO comando);
 
 void GerarEstatisticas(const char *diretorio, tPacman *pacman);
 
@@ -48,6 +48,10 @@ bool comeuFruta(int frutasPreJogada, tPacman *pacman);
 
 bool bateuParede(int colisoesPreJogada, tPacman *pacman);
 
+void desalocaHistoricoResumo(tPacman *pacman);
 
+void criaResumo(const char *diretorio, tPacman *pacman);
+
+void devolveTunel(tMapa *mapa, tPacman *pacman);
 
 #endif
