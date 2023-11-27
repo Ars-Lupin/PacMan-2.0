@@ -12,13 +12,7 @@
 
 #define maxCaminho 1001 // Tamanho maximo do diretorio
 
-// void geraEstastisticas{}
-
-// void geraResumo{}
-
-// void geraRanking{}
-
-void realizaJogo(const char *diretorio, tMapa *mapa, tPacman *pacman)
+void realizaJogo(tMapa *mapa, tPacman *pacman)
 {
     tFantasma **fantasma;
     tPosicao *rastroPacman;
@@ -110,7 +104,7 @@ void inicializarJogo(const char *diretorio)
     tPacman *pacman;
     tMapa *mapa;
     mapa = CriaMapa(diretorio);
-    sprintf(caminho_inicializacao, "%s/saida/inicializacao.txt", diretorio);
+    sprintf(caminho_inicializacao, "inicializacao.txt");
     FILE *arquivo = fopen(caminho_inicializacao, "w");
     if (arquivo == NULL)
     {
@@ -134,12 +128,11 @@ void inicializarJogo(const char *diretorio)
     fprintf(arquivo, "Pac-Man comecara o jogo na linha %d e coluna %d\n", pacman->posicaoAtual->linha + 1, pacman->posicaoAtual->coluna + 1);
 
     fclose(arquivo);
-    realizaJogo(diretorio, mapa, pacman);
-    GerarEstatisticas(diretorio, pacman);
-    GerarRanking(diretorio, pacman);
-    criaResumo(diretorio, pacman);
-    // desalocaHistoricoResumo(pacman);
-    DesalocaPacman(pacman);
+    realizaJogo(mapa, pacman);
+    gerarEstatisticas(pacman);
+    gerarRanking(pacman);
+    criaResumo(pacman);
+    desalocaPlayer(pacman);
     DesalocaMapa(mapa);
 }
 

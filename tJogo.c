@@ -180,11 +180,11 @@ void atribuiComidaJogada(COMANDO comando, tPacman *pacman)
     }
 }
 
-void GerarEstatisticas(const char *diretorio, tPacman *pacman)
+void gerarEstatisticas(tPacman *pacman)
 {
     char caminho_estatisticas[maxCaminho];
 
-    sprintf(caminho_estatisticas, "%s/saida/estatisticas.txt", diretorio);
+    sprintf(caminho_estatisticas, "estatisticas.txt");
     FILE *arquivo = fopen(caminho_estatisticas, "a");
 
     fprintf(arquivo, "Numero de movimentos: %d\n", ObtemNumeroAtualMovimentosPacman(pacman));
@@ -198,7 +198,7 @@ void GerarEstatisticas(const char *diretorio, tPacman *pacman)
     fclose(arquivo);
 }
 
-void GerarRanking(const char *diretorio, tPacman *pacman) // analisa os dados e forma o ranking
+void gerarRanking(tPacman *pacman) // analisa os dados e forma o ranking
 {
     char caminho_ranking[maxCaminho];
     tRanking maior[4];
@@ -249,7 +249,7 @@ void GerarRanking(const char *diretorio, tPacman *pacman) // analisa os dados e 
         }
     }
 
-    sprintf(caminho_ranking, "%s/saida/ranking.txt", diretorio);
+    sprintf(caminho_ranking, "ranking.txt");
     FILE *arquivo = fopen(caminho_ranking, "a");
     for (i = 0; i < 4; i++)
     {
@@ -259,25 +259,13 @@ void GerarRanking(const char *diretorio, tPacman *pacman) // analisa os dados e 
     fclose(arquivo);
 }
 
-// void desalocaHistoricoResumo(tPacman *pacman)
-// {
-//     int i;
-//     if (pacman->historicoDeMovimentosSignificativos != NULL)
-//     {
 
-//         for (i = 0; i < pacman->nMovimentosSignificativos; i++)
-//         {
-//             DesalocaMovimento(pacman->historicoDeMovimentosSignificativos[i]);
-//         }
-//     }
-// }
-
-void criaResumo(const char *diretorio, tPacman *pacman)
+void criaResumo(tPacman *pacman)
 {
     char caminho_resumo[maxCaminho];
     int i;
     int nMovimentos = ObtemNumeroMovimentosSignificativosPacman(pacman);
-    sprintf(caminho_resumo, "%s/saida/resumo.txt", diretorio);
+    sprintf(caminho_resumo, "resumo.txt");
     FILE *arquivo = fopen(caminho_resumo, "a");
 
     for (i = 0; i < nMovimentos; i++)
@@ -291,7 +279,6 @@ void criaResumo(const char *diretorio, tPacman *pacman)
         fprintf(arquivo, "Movimento %d (%c) %s\n", numjogadas, jogada, acao);
     }
     fclose(arquivo);
-    // desalocaHistoricoResumo(pacman);
 }
 
 void devolveTunel(tMapa *mapa, tPacman *pacman)
@@ -313,4 +300,36 @@ void devolveTunel(tMapa *mapa, tPacman *pacman)
             AtualizaItemMapa(mapa, mapa->tunel->acesso1, tunel);
         }
     }
+}
+
+void desalocaPlayer(tPacman *pacman)
+{
+    int i;
+    if (pacman != NULL)
+    {
+        if (pacman->posicaoAtual != NULL)
+        {
+            DesalocaPosicao(pacman->posicaoAtual);
+        }
+    }
+    for (i = 0; i < pacman->nMovimentosSignificativos; i++)
+    {
+        DesalocaMovimento(pacman->historicoDeMovimentosSignificativos[i]);
+    }
+    if (pacman->historicoDeMovimentosSignificativos != NULL)
+    {
+        free(pacman->historicoDeMovimentosSignificativos);
+    }
+    if (pacman->trilha != NULL)
+    {
+        for (i = 0; i < pacman->nLinhasTrilha; i++)
+        {
+            if (pacman->trilha[i] != NULL)
+            {
+                free(pacman->trilha[i]);
+            }
+        }
+        free(pacman->trilha);
+    }
+    free(pacman);
 }
